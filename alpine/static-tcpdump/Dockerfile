@@ -8,7 +8,7 @@ WORKDIR /build
 
 RUN wget -O tcpdump.tar.gz https://www.tcpdump.org/release/tcpdump-${app_version}.tar.gz && \
     tar xf tcpdump.tar.gz && \
-    cd tcpdump-${VERSION} && \
+    cd tcpdump-${app_version} && \
     CFLAGS=-static ./configure --prefix /packs/tcpdump --without-crypto && \
     make -j && \
     make install && \
