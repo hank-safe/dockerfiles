@@ -4,7 +4,7 @@ ARG app_version=1.8.1
 
 RUN apk add wget
 
-WORKDIR /build
+WORKDIR /packs
 
 RUN arch="$(arch)"; \
     case "$arch" in \
@@ -15,8 +15,7 @@ RUN arch="$(arch)"; \
         *) echo >&2 "error: unsupported architecture: '$arch'"; exit 1; \
         ;; \
     esac; \
-    wget -O /packs/j1 "$downloadUrl";
-WORKDIR /packs
+    wget -O /packs/jq "$downloadUrl";
 
 FROM alpine
 
