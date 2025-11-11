@@ -12,7 +12,7 @@ RUN wget -O tcpdump.tar.gz https://www.tcpdump.org/release/tcpdump-${app_version
     CFLAGS=-static ./configure --prefix /packs/tcpdump --without-crypto && \
     make -j && \
     make install && \
-    strip /out/tcpdump/bin/tcpdump && \
+    strip /packs/tcpdump/bin/tcpdump && \
     chown -R $(id -u):$(id -g) /packs/tcpdump
 
 WORKDIR /packs
