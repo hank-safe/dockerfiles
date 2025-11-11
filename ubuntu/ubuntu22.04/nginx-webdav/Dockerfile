@@ -3,7 +3,7 @@ FROM ubuntu:22.04
 LABEL maintainer "Hank"
 LABEL github "https://github.com/agocan"
 
-ARG nginx_version=1.27.4
+ARG app_version=1.27.4
 
 WORKDIR /app
 
@@ -18,9 +18,9 @@ RUN apt-get update && apt-get install -y \
 
 COPY nginx-dav-ext-module /app/nginx-dav-ext-module
 
-RUN wget http://nginx.org/download/nginx-${nginx_version}.tar.gz && \
-    tar xf nginx-${nginx_version}.tar.gz && \
-    cd nginx-${nginx_version} && \
+RUN wget http://nginx.org/download/nginx-${app_version}.tar.gz && \
+    tar xf nginx-${app_version}.tar.gz && \
+    cd nginx-${app_version} && \
     ./configure --prefix=/usr/local/nginx \
                 --pid-path=/var/run/nginx.pid \
                 --lock-path=/var/run/nginx.lock \
