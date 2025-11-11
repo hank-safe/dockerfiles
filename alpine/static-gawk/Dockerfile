@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine  AS builder
 
 ARG app_version=5.3.2
 
@@ -15,5 +15,11 @@ RUN wget -O gawk.tar.gz  https://ftp.gnu.org/gnu/gawk/gawk-${app_version}.tar.gz
     make install && \
     strip /packs/gawk/bin/gawk && \
     chown -R $(id -u):$(id -g) /packs/gawk 
+
+WORKDIR /packs
+
+FROM alpine
+
+COPY --from=builder /packs /packs
 
 WORKDIR /packs

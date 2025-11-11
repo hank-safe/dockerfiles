@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine AS builder
 
 ARG app_version=4.0
 
@@ -15,5 +15,11 @@ RUN wget -O bmon.tar.gz  https://github.com/tgraf/bmon/releases/download/v${app_
     make install && \
     strip /packs/bmon/bin/bmon && \
     chown -R $(id -u):$(id -g) /packs/bmon 
+
+WORKDIR /packs
+
+FROM alpine
+
+COPY --from=builder /packs /packs
 
 WORKDIR /packs

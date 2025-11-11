@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine AS builder
 
 ARG app_version=8.11.0
 
@@ -22,3 +22,10 @@ RUN wget https://curl.haxx.se/download/curl-${app_version}.tar.gz && \
     strip /packs/curl/bin/curl 
 
 WORKDIR /packs
+
+FROM alpine
+
+COPY --from=builder /packs /packs
+
+WORKDIR /packs
+

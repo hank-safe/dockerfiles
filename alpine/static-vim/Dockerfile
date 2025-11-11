@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine AS builder
 
 ARG app_version=9.1.1901
 
@@ -22,6 +22,12 @@ RUN wget -O vim.zip https://codeload.github.com/vim/vim/zip/refs/tags/v${app_ver
     chown -R $(id -u):$(id -g) /out/vim && \
     mkdir -p /packs && \
     cp -a /out/vim /packs
+
+WORKDIR /packs
+
+FROM alpine
+
+COPY --from=builder /packs /packs
 
 WORKDIR /packs
 

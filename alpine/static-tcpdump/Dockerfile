@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine AS builder
 
 ARG app_version=4.99.4
 
@@ -16,3 +16,10 @@ RUN wget -O tcpdump.tar.gz https://www.tcpdump.org/release/tcpdump-${app_version
     chown -R $(id -u):$(id -g) /packs/tcpdump
 
 WORKDIR /packs
+
+FROM alpine
+
+COPY --from=builder /packs /packs
+
+WORKDIR /packs
+

@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine AS builder
 
 ARG app_version=3.36
 
@@ -15,6 +15,12 @@ RUN wget -O fio.tar.gz  https://github.com/axboe/fio/archive/refs/tags/fio-${app
     make install && \
     strip /packs/fio/bin/fio && \
     chown -R $(id -u):$(id -g) /packs/fio
+
+WORKDIR /packs
+
+FROM alpine
+
+COPY --from=builder /packs /packs
 
 WORKDIR /packs
 
