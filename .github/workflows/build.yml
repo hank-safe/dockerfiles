@@ -56,4 +56,4 @@ jobs:
           app_version=${{ env.build_version }}
         tags: crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/${{ env.build_name }}:${{ env.build_tag }}
         platforms: ${{ env.build_arch }}
-        file: Dockerfile
+        file: ${{ env.build_dir }}/Dockerfile
