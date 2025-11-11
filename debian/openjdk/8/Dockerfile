@@ -17,8 +17,7 @@ ARG http_proxy
 ARG app_version=8u462-b08
 
 # RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list   # 10 之前改这里
-RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list.d/debian.sources  && \
-    apt-get update && \
+RUN apt-get update && \
     apt-get install -y --no-install-recommends ca-certificates p11-kit curl telnet less libfreetype6 libx11-dev fontconfig unzip procps && \
     rm -rf /var/lib/apt/lists/*
 
@@ -33,14 +32,15 @@ RUN { \
 
 ENV PATH=/usr/local/openjdk-8/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ENV LANG=C.UTF-8
-ENV JAVA_VERSION=${openjdk_version}
+ENV JAVA_VERSION=${app_version}
 
 RUN set -eux; \
     arch="$(dpkg --print-architecture)"; \
+    little_version="$(echo ${app_version} | sed 's#-##g')" ;\
     case "$arch" in \
-        'amd64') downloadUrl="https://github.com/adoptium/temurin8-binaries/releases/download/jdk${app_version}/OpenJDK8U-jdk_x64_linux_hotspot_$(echo ${app_version} | sed 's#-##g').tar.gz"; \
+        'amd64') downloadUrl="https://github.com/adoptium/temurin8-binaries/releases/download/jdk${app_version}/OpenJDK8U-jdk_x64_linux_hotspot_${little_version}.tar.gz"; \
         ;; \
-        'arm64') downloadUrl="https://github.com/adoptium/temurin8-binaries/releases/download/jdk${app_version}/OpenJDK8U-jdk_aarch64_linux_hotspot_$(echo ${app_version} | sed 's#-##g').tar.gz"; \
+        'arm64') downloadUrl="https://github.com/adoptium/temurin8-binaries/releases/download/jdk${app_version}/OpenJDK8U-jdk_aarch64_linux_hotspot_${little_version}.tar.gz"; \
         ;; \
         *) echo >&2 "error: unsupported architecture: '$arch'"; exit 1; \
         ;; \
