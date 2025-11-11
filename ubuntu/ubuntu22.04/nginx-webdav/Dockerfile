@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y \
     wget git && \
     rm -rf /var/lib/apt/lists/*
 
-COPY nginx-dav-ext-module /app/nginx-dav-ext-module
+RUN git clone https://github.com/arut/nginx-dav-ext-module.git
 
 RUN wget http://nginx.org/download/nginx-${app_version}.tar.gz && \
     tar xf nginx-${app_version}.tar.gz && \
