@@ -13,7 +13,7 @@ RUN wget https://chrony-project.org/releases/chrony-${app_version}.tar.gz && \
     CFLAGS='-static -g' LDFLAGS='-static -lm' ./configure --prefix=/packs/chrony --enable-scfilter --enable-ntp-signd && \
     make -j && \
     make install && \
-    strip /packs/chrony/bin/chrony && \
+    strip /packs/chrony/bin/chronyc && \
     chown -R $(id -u):$(id -g) /packs/chrony
 
 FROM alpine
