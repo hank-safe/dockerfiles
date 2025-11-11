@@ -25,4 +25,5 @@
 |---|---|---|
 |openjdk8|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/openjdk:8u462-b08|[debian/openjdk/8](debian/openjdk/8)|
 |nacos|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/nacos:2.4.3|[debian/nacos](debian/nacos)|
+|tomcat|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/tomcat:9.0.112|[debian/tomcat](debian/tomcat)|
 |nginx-webdav|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/nginx-webdav:1.27.4|[ubuntu/ubuntu22.04/nginx-webdav](ubuntu/ubuntu22.04/nginx-webdav)|
