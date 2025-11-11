@@ -4,7 +4,7 @@ ARG app_version=9.1.1901
 
 RUN apk add gcc make musl-dev ncurses-static unzip 
 
-RUN wget -O vim.zip https://codeload.github.com/vim/vim/zip/refs/tags/v${VIM_VERSION} && \
+RUN wget -O vim.zip https://github.com/vim/vim/archive/refs/tags/v${VIM_VERSION}.zip && \
     unzip vim.zip && \
     cd vim-${VIM_VERSION} && \
     LDFLAGS="-static" ./configure --disable-channel --disable-gpm --disable-gtktest \
