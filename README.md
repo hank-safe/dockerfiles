@@ -18,7 +18,19 @@
 ### 二进制文件
 |name|镜像名称|路径|
 |---|---|---|
+|cfssl|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/binary-cfssl:1.6.5|[rockylinux/binary-cfssl](rockylinux/binary-cfssl)|
+|cni|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/binary-cni:1.6.2|[rockylinux/binary-cni](rockylinux/binary-cni)|
+|compose|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/binary-compose:2.31.0|[rockylinux/binary-compose](rockylinux/binary-compose)|
+|containerd|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/binary-containerd:1.7.28|[rockylinux/binary-containerd](rockylinux/binary-containerd)|
+|crictl|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/binary-crictl:1.34.0|[rockylinux/binary-crictl](rockylinux/binary-crictl)|
+|docker|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/binary-docker:28.5.2|[rockylinux/binary-docker](rockylinux/binary-docker)|
 |etcd|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/binary-etcd:3.5.17|[rockylinux/binary-etcd](rockylinux/binary-etcd)|
+|harbor|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/binary-harbor:2.12.2|[rockylinux/binary-harbor](rockylinux/binary-harbor)|
+|helm|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/binary-helm:3.16.3|[rockylinux/binary-helm](rockylinux/binary-helm)|
+|k3s|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/binary-k3s:1.32.2-k3s1|[rockylinux/binary-k3s](rockylinux/binary-k3s)|
+|kubernetes|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/binary-kubernetes:1.26.15|[rockylinux/binary-kubernetes](rockylinux/binary-kubernetes)|
+|miniconda|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/binary-miniconda:py39_24.11.1-0|[rockylinux/binary-miniconda](rockylinux/binary-miniconda)|
+|sshpass|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/binary-sshpass:1.09|[rockylinux/binary-sshpass](rockylinux/binary-sshpass)|
 
 ### 开源组件
 |name|镜像名称|路径|
