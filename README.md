@@ -8,6 +8,7 @@
 |bmon|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-bmon:4.0|[alpine/static-bmon](alpine/static-bmon)|
 |fio|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-fio:3.36|[alpine/static-fio](alpine/static-fio)|
 |vim|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-vim:9.1.1901|[alpine/static-vim](alpine/static-vim)|
+|gawk|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-gawk:5.3.2|[alpine/static-gawk](alpine/static-gawk)|
 
 ### 二进制文件
 |name|镜像名称|路径|
@@ -18,4 +19,4 @@
 |name|镜像名称|路径|
 |---|---|---|
 |openjdk8|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/openjdk:8u462-b08|[debian/openjdk/8](debian/openjdk/8)|
-
+|nacos|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/nacos:2.4.3|[debian/nacos](debian/nacos)|
