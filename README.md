@@ -15,6 +15,7 @@
 |jq|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-jq:1.8.1|[alpine/static-jq](alpine/static-jq)|
 |tcpdump|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-tcpdump:4.99.4|[alpine/static-tcpdump](alpine/static-tcpdump)|
 |vim|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-vim:9.1.1901|[alpine/static-vim](alpine/static-vim)|
+|wget|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-wget:1.24.5|[alpine/static-wget](alpine/static-wget)|
 
 ### rockylinux
 |name|镜像名称|路径|
