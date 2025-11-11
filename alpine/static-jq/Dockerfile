@@ -6,11 +6,11 @@ RUN apk add wget
 
 WORKDIR /build
 
-RUN arch="$(dpkg --print-architecture)"; \
+RUN arch="$(arch)"; \
     case "$arch" in \
-        'amd64') downloadUrl="https://github.com/jqlang/jq/releases/download/jq-${app_version}/jq-linux-amd64"; \
+        'x86_64') downloadUrl="https://github.com/jqlang/jq/releases/download/jq-${app_version}/jq-linux-amd64"; \
         ;; \
-        'arm64') downloadUrl="https://github.com/jqlang/jq/releases/download/jq-${app_version}/jq-linux-arm64"; \
+        'aarch64') downloadUrl="https://github.com/jqlang/jq/releases/download/jq-${app_version}/jq-linux-arm64"; \
         ;; \
         *) echo >&2 "error: unsupported architecture: '$arch'"; exit 1; \
         ;; \
