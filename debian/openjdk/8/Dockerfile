@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 ccr.ccs.tencentyun.com/hank997/binary:nmap AS nmap-packs
+#FROM --platform=linux/amd64 ccr.ccs.tencentyun.com/hank997/binary:nmap AS nmap-packs
 FROM ccr.ccs.tencentyun.com/hank997/debian:12.10-slim
 # 旧版本
 # https://github.com/AdoptOpenJDK/openjdk8-binaries
@@ -82,7 +82,7 @@ COPY arthas /usr/local/openjdk-8/arthas
 COPY bin/arthas_boot /usr/local/openjdk-8/bin/arthas_boot
 RUN chmod +x /usr/local/openjdk-8/bin/arthas_boot
 
-COPY --from=nmap-packs /packs/${TARGETARCH} /usr/local/bin
+#COPY --from=nmap-packs /packs/${TARGETARCH} /usr/local/bin
 
 
 # 这样的方式不友好
