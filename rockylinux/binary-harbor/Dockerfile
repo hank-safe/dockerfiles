@@ -1,6 +1,6 @@
 ARG app_version=2.12.2
 
-FROM --platform=linux/arm64 hank997/harbor-arm:${app_version}-arm64 AS harbor-arm
+FROM --platform=linux/arm64 hank997/harbor-arm:${app_version} AS harbor-arm
 FROM rockylinux/rockylinux:10.0
 
 # 3.13.1
