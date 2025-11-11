@@ -50,10 +50,10 @@ jobs:
     - name: Build and push Docker image
       uses: docker/build-push-action@v3
       with:
-        context: .
+        context: ${{ env.build_dir }}
         push: true
         build-args: |
           app_version=${{ env.build_version }}
         tags: crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/${{ env.build_name }}:${{ env.build_tag }}
         platforms: ${{ env.build_arch }}
-        file: ${{ env.build_dir }}/Dockerfile
+        file: Dockerfile
