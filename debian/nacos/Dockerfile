@@ -1,5 +1,5 @@
 # ccr.ccs.tencentyun.com/hank997/nacos-server:2.4.3
-FROM  crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/openjdk:8u462-slim-12.10
+FROM  crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/openjdk:8u462-b08
 
 LABEL maintainer "Hank"
 LABEL github "https://github.com/agocan"
