@@ -12,6 +12,7 @@
 |gawk|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-gawk:5.3.2|[alpine/static-gawk](alpine/static-gawk)|
 |htop|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-htop:3.4.1|[alpine/static-htop](alpine/static-htop)|
 |iotop|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-iotop:1.29|[alpine/static-iotop](alpine/static-iotop)|
+|jq|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-jq:1.8.1|[alpine/static-jq](alpine/static-jq)|
 |tcpdump|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-tcpdump:4.99.4|[alpine/static-tcpdump](alpine/static-tcpdump)|
 |vim|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-vim:9.1.1901|[alpine/static-vim](alpine/static-vim)|
 
