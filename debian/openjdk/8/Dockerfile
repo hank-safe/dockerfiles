@@ -36,7 +36,7 @@ ENV JAVA_VERSION=${app_version}
 
 RUN set -eux; \
     arch="$(dpkg --print-architecture)"; \
-    little_version="$(echo ${app_version} | sed 's#-##g')" ;\
+    little_version=$(echo ${app_version} | sed 's#-##g') ;\
     case "$arch" in \
         'amd64') downloadUrl="https://github.com/adoptium/temurin8-binaries/releases/download/jdk${app_version}/OpenJDK8U-jdk_x64_linux_hotspot_${little_version}.tar.gz"; \
         ;; \
