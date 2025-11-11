@@ -1,5 +1,5 @@
 #FROM --platform=linux/amd64 ccr.ccs.tencentyun.com/hank997/binary:nmap AS nmap-packs
-FROM ccr.ccs.tencentyun.com/hank997/debian:12.10-slim
+FROM debian:12.10-slim
 # 旧版本
 # https://github.com/AdoptOpenJDK/openjdk8-binaries
 # https://github.com/AdoptOpenJDK/openjdk8-upstream-binaries
