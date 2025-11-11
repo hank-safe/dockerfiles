@@ -14,7 +14,7 @@ RUN wget -O Miniconda3-aarch64.sh https://repo.anaconda.com/miniconda/Miniconda3
 RUN bash Miniconda3-aarch64.sh -b -p /miniconda && \
     export PATH="/miniconda/bin:$PATH" && \
     mkdir -p /packs/arm64/ansible-base && \
-    pip3 download -d /packs/arm64/ansible-base ansible-base==2.10.11 -i https://mirrors.ustc.edu.cn/pypi/simple && \
+    pip3 download -d /packs/arm64/ansible-base ansible-base==2.10.11 && \
     cd /packs/arm64 && \
     tar zcvf ansible-base.tar.gz ansible-base && \
     rm -rf ansible-base && \
@@ -37,7 +37,7 @@ RUN wget -O Miniconda3-x86_64.sh https://repo.anaconda.com/miniconda/Miniconda3-
 RUN bash Miniconda3-x86_64.sh -b -p /miniconda && \
     export PATH="/miniconda/bin:$PATH" && \
     mkdir -p /packs/amd64/ansible-base && \
-    pip3 download -d /packs/amd64/ansible-base ansible-base==2.10.11 -i https://mirrors.ustc.edu.cn/pypi/simple && \
+    pip3 download -d /packs/amd64/ansible-base ansible-base==2.10.11 && \
     cd /packs/amd64 && \
     tar zcvf ansible-base.tar.gz ansible-base && \
     rm -rf ansible-base && \
