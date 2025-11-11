@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:22.04 AS builder
 
 LABEL maintainer "Hank"
 LABEL github "https://github.com/agocan"
