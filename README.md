@@ -2,7 +2,7 @@
 
 ## 镜像列表
 
-### 静态镜像
+### alpine
 |name|镜像名称|路径|
 |---|---|---|
 |bmon|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-bmon:4.0|[alpine/static-bmon](alpine/static-bmon)|
@@ -15,7 +15,7 @@
 |tcpdump|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-tcpdump:4.99.4|[alpine/static-tcpdump](alpine/static-tcpdump)|
 |vim|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-vim:9.1.1901|[alpine/static-vim](alpine/static-vim)|
 
-### 二进制文件
+### rockylinux
 |name|镜像名称|路径|
 |---|---|---|
 |cfssl|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/binary-cfssl:1.6.5|[rockylinux/binary-cfssl](rockylinux/binary-cfssl)|
@@ -32,10 +32,16 @@
 |miniconda|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/binary-miniconda:py39_24.11.1-0|[rockylinux/binary-miniconda](rockylinux/binary-miniconda)|
 |sshpass|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/binary-sshpass:1.09|[rockylinux/binary-sshpass](rockylinux/binary-sshpass)|
 
-### 开源组件
+### debian
 |name|镜像名称|路径|
 |---|---|---|
 |openjdk8|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/openjdk:8u462-b08|[debian/openjdk/8](debian/openjdk/8)|
 |nacos|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/nacos:2.4.3|[debian/nacos](debian/nacos)|
 |tomcat|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/tomcat:9.0.112|[debian/tomcat](debian/tomcat)|
-|nginx-webdav|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/nginx-webdav:1.27.4|[ubuntu/ubuntu22.04/nginx-webdav](ubuntu/ubuntu22.04/nginx-webdav)|
+
+### ubuntu
+
+|name|镜像名称|路径|
+|---|---|---|
+|nginx-webdav|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/nginx-webdav:1.27.4|[ubuntu/nginx-webdav](ubuntu/nginx-webdav)|
+|ubuntu depends|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/ubuntu:deps|[ubuntu/depends](debian/depends)|
