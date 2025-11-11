@@ -1,0 +1,4 @@
+FROM ccr.ccs.tencentyun.com/hank997/openjdk:8u432-slim-12.10
+RUN apt-get update && \
+    apt-get install mariadb-client -y && \
+    rm -rf /var/lib/apt/lists/*
