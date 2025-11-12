@@ -53,4 +53,5 @@
 |name|镜像名称|路径|
 |---|---|---|
 |nginx-webdav|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/nginx-webdav:1.27.4|[ubuntu/nginx-webdav](ubuntu/nginx-webdav)|
-|ubuntu depends|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/ubuntu:deps|[ubuntu/depends](debian/depends)|
+|ubuntu depends|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/ubuntu:deps|[ubuntu/depends](ubuntu/depends)|
+|python|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-python:3.11.6|[ubuntu/static-python](ubuntu/static-python)|
