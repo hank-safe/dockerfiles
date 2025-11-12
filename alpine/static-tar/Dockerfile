@@ -9,7 +9,7 @@ WORKDIR /build
 RUN wget -O tar.tar.gz http://ftp.gnu.org/gnu/tar/tar-${app_version}.tar.gz && \
     tar xf tar.tar.gz && \
     cd tar-${app_version} && \
-    FORCE_UNSAFE_CONFIGURE=1  CFLAGS=-static ./configure --prefix /out/tar  LDFLAGS="-static" && \
+    FORCE_UNSAFE_CONFIGURE=1  CFLAGS=-static ./configure --prefix /packs/tar  LDFLAGS="-static" && \
     make -j && \
     make install && \
     strip /packs/tar/bin/tar && \
