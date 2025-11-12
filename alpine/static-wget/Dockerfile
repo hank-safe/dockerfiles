@@ -1,28 +1,58 @@
 FROM alpine AS builder
 
 ARG app_version=1.24.5
+ARG PCRE_VERSION=8.45
 
-RUN apk add build-base gcc musl-dev linux-headers && \
-    apk add \
-        build-base \
-        clang \
-        openssl-dev \
-        pcre-dev \
-        zlib-dev \
-        perl \
-        openssl-libs-static \
-        zlib-static
+# 安装构建依赖
+RUN apk add --no-cache \
+    build-base \
+    clang \
+    gcc \
+    linux-headers \
+    openssl-dev \
+    zlib-dev \
+    perl \
+    openssl-libs-static \
+    zlib-static \
+    tar \
+    wget
 
 WORKDIR /build
 
-RUN wget -O wget.tar.gz  https://ftp.gnu.org/gnu/wget/wget-${app_version}.tar.gz && \
+# 编译 PCRE
+RUN wget -O pcre.tar.gz https://sourceforge.net/projects/pcre/files/pcre/${PCRE_VERSION}/pcre-${PCRE_VERSION}.tar.gz && \
+    tar xf pcre.tar.gz && \
+    cd pcre-${PCRE_VERSION} && \
+    CFLAGS="-O2 -pipe" LDFLAGS="-static" ./configure \
+        --prefix=/opt/static-pcre \
+        --disable-shared \
+        --enable-static \
+        --disable-cpp \
+        --enable-utf8 \
+        --enable-unicode-properties && \
+    make -j$(nproc) && \
+    make install
+
+# 编译 wget
+RUN wget -O wget.tar.gz https://ftp.gnu.org/gnu/wget/wget-${app_version}.tar.gz && \
     tar xf wget.tar.gz && \
     cd wget-${app_version} && \
-    LDFLAGS="-static" PKG_CONFIG="pkg-config --static" ./configure --prefix=/packs/wget  --with-ssl=openssl --sysconfdir=/etc --disable-rpath && \
-    make -j && \
+    LDFLAGS="-static -L/opt/static-pcre/lib" \
+    CPPFLAGS="-I/opt/static-pcre/include" \
+    PKG_CONFIG="/usr/bin/pkg-config --static" \
+    ./configure \
+        --prefix=/packs/wget \
+        --with-ssl=openssl \
+        --with-pcre=yes \
+        --sysconfdir=/etc \
+        --disable-rpath && \
+    make -j$(nproc) && \
     make install && \
-    strip /packs/wget/bin/wget && \
-    chown -R $(id -u):$(id -g) /packs/wget
+    strip /packs/wget/bin/wget
+
+# 验证二进制文件是否为静态链接
+RUN ldd /packs/wget/bin/wget 2>&1 | grep -q "not a dynamic executable" && \
+    echo "Static build successful" || (echo "Not a static binary"; exit 1)
 
 WORKDIR /packs
 
@@ -32,3 +62,6 @@ COPY --from=builder /packs /packs
 
 WORKDIR /packs
 
+# 验证 wget 功能
+RUN /packs/wget/bin/wget --version && \
+    echo "Build completed successfully"
