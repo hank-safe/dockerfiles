@@ -1,6 +1,7 @@
 FROM ccr.ccs.tencentyun.com/hank997/alpine:3.20.3 AS builder
 
 ARG app_version=7.95
+ARG PCRE_VERSION=8.45
 
 RUN apk add gcc g++ make automake autoconf  libtool linux-headers && \
     apk add openssl-libs-static zlib-static  libssh2-static openssl openssl-dev libpcap-dev  libssh2-dev 
