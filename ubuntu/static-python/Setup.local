@@ -5,6 +5,10 @@
 # cannot be built as shared!
 *static*
 
+# SSL/TLS support
+_ssl _ssl.c -lssl -lcrypto
+_hashlib _hashopenssl.c -lssl -lcrypto
+
 # module C APIs are used in core
 atexit atexitmodule.c
 faulthandler faulthandler.c

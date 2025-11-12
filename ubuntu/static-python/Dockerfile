@@ -15,7 +15,7 @@ RUN mkdir -p /opt/python && mkdir -p /src && wget https://www.python.org/ftp/pyt
 
 COPY Setup.local /src/Python-${app_version}/Modules/Setup.local
 
-RUN cd /src/Python-${app_version} && ./configure LDFLAGS="-static" --disable-shared --prefix=/packs/python --enable-optimizations
+RUN cd /src/Python-${app_version} && ./configure LDFLAGS="-static" --disable-shared --prefix=/packs/python --enable-optimizations --with-openssl=/usr/include/openssl 
 
 RUN cd /src/Python-${app_version} && make LDFLAGS="-static" LINKFORSHARED=" " -j ${BUILD_THREADS}
 
