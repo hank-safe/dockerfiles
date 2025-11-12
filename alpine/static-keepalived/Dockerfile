@@ -24,18 +24,30 @@ RUN apk --no-cache add \
         openssl \
         openssl-dev \
         openssl-libs-static \
-        pcre2 \
-        pcre2-dev \
         autoconf \
         automake zlib-static  alpine-sdk linux-headers  libmnl-static git
 
 WORKDIR /build
 
+RUN wget -O pcre.tar.gz https://sourceforge.net/projects/pcre/files/pcre/${PCRE_VERSION}/pcre-${PCRE_VERSION}.tar.gz && \
+    tar xf pcre.tar.gz && \
+    cd pcre-${PCRE_VERSION} && \
+    CFLAGS="-O2 -pipe" LDFLAGS="-static" ./configure \
+        --prefix=/opt/static-pcre \
+        --disable-shared \
+        --enable-static \
+        --disable-cpp \
+        --enable-utf8 \
+        --enable-unicode-properties && \
+    make -j$(nproc) && \
+    make install
+
 RUN wget -O keepalived.tar.gz https://www.keepalived.org/software/keepalived-${app_version}.tar.gz && \
     tar xf keepalived.tar.gz && \
     cd keepalived-${app_version} && \
     ./autogen.sh && \
-    CFLAGS='-static -s' LDFLAGS=-static ./configure  --disable-dynamic-linking \
+    CFLAGS='-static -s' CPPFLAGS="-I/opt/static-pcre/include" LDFLAGS="-static" \
+    ./configure  --disable-dynamic-linking \
     --prefix=/usr \
     --exec-prefix=/usr \
     --bindir=/usr/bin \
