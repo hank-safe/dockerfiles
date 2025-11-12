@@ -12,11 +12,7 @@ RUN wget -O nmap.tar.gz https://nmap.org/dist/nmap-${app_version}.tgz && \
     cd nmap-${app_version} && \
     CFLAGS=-static ./configure --prefix /packs/nmap  --with-openssl=/usr/include/openssl --with-libssh2 && \
     make -j4 V=1 && \
-    make install && \
-    strip /packs/nmap/bin/nmap && \
-    strip /packs/nmap/bin/ncat && \
-    strip /packs/nmap/bin/nping && \
-    chown -R $(id -u):$(id -g) /packs/nmap 
+    make install 
 
 WORKDIR /packs
 
