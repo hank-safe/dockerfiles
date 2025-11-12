@@ -1,6 +1,7 @@
 FROM alpine AS builder
 
 ARG app_version=2.2.8
+ARG PCRE_VERSION=8.45
 
 RUN apk --no-cache add \
         binutils \
