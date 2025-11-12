@@ -9,7 +9,7 @@ WORKDIR /build
 
 RUN wget -O nmap.tar.gz https://nmap.org/dist/nmap-${app_version}.tgz && \
     tar xf nmap.tar.gz && \
-    cd nmap-${VERSION} && \
+    cd nmap-${app_version} && \
     CFLAGS=-static ./configure --prefix /packs/nmap  --with-openssl=/usr/include/openssl --with-libssh2 && \
     make -j && \
     make install && \
