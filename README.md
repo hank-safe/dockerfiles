@@ -15,6 +15,7 @@
 |jq|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-jq:1.8.1|[alpine/static-jq](alpine/static-jq)|
 |keepalived（暂时构建失败）|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-keepalived:2.2.8|[alpine/static-keepalived](alpine/static-keepalived)|
 |lrzsz（暂时构建失败）|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-lrzsz:0.12.20|[alpine/static-lrzsz](alpine/static-lrzsz)|
+|net-tools|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-net-tools:2.10|[alpine/static-net-tools](alpine/static-net-tools)|
 |nmap（暂时构建失败）|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-nmap:7.95|[alpine/static-nmap](alpine/static-nmap)|
 |rsync|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-rsync:3.4.1|[alpine/static-rsync](alpine/static-rsync)|
 |tar|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-tar:1.35|[alpine/static-tar](alpine/static-tar)|
