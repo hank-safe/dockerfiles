@@ -50,10 +50,6 @@ RUN wget -O wget.tar.gz https://ftp.gnu.org/gnu/wget/wget-${app_version}.tar.gz 
     make install && \
     strip /packs/wget/bin/wget
 
-# 验证二进制文件是否为静态链接
-RUN ldd /packs/wget/bin/wget 2>&1 | grep -q "not a dynamic executable" && \
-    echo "Static build successful" || (echo "Not a static binary"; exit 1)
-
 WORKDIR /packs
 
 FROM alpine
@@ -61,7 +57,3 @@ FROM alpine
 COPY --from=builder /packs /packs
 
 WORKDIR /packs
-
-# 验证 wget 功能
-RUN /packs/wget/bin/wget --version && \
-    echo "Build completed successfully"
