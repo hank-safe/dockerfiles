@@ -16,7 +16,7 @@ RUN wget -O vim.zip https://codeload.github.com/vim/vim/zip/refs/tags/v${app_ver
     make install && \
     mkdir -p /out/vim && \
     cp -r /usr/local/* /out/vim && \
-    wget -O /out/vim/share/vim/vim91/master.zip https://github.com/amix/vimrc/archive/refs/heads/master.zip && \
+    wget -O /out/vim/share/vim/vim91/basic.vim https://raw.githubusercontent.com/amix/vimrc/refs/heads/master/vimrcs/basic.vim && \
     echo 'set mouse-=a' >> /out/vim/share/vim/vim91/defaults.vim && \
     strip /out/vim/bin/vim && \
     chown -R $(id -u):$(id -g) /out/vim && \
