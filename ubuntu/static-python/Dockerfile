@@ -1,4 +1,4 @@
-FROM ccr.ccs.tencentyun.com/hank997/ubuntu:22.04 AS builder
+FROM ubuntu:22.04 AS builder
 
 ARG app_version=3.11.6
 ENV app_version=${app_version}
@@ -21,7 +21,7 @@ RUN cd /src/Python-${app_version} && make LDFLAGS="-static" LINKFORSHARED=" " -j
 
 RUN cd /src/Python-${app_version} && make install -j ${BUILD_THREADS}
 
-FROM ccr.ccs.tencentyun.com/hank997/ubuntu:22.04
+FROM ubuntu:22.04
 
 COPY --from=builder /packs /packs
 
