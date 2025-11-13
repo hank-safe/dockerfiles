@@ -7,7 +7,7 @@ RUN apk add gcc make musl-dev ncurses-static unzip
 WORKDIR /build
 
 RUN wget -O vim.zip https://codeload.github.com/vim/vim/zip/refs/tags/v${app_version} && \
-    unzip vim.zip && \
+    unzip -q vim.zip && \
     cd vim-${app_version} && \
     LDFLAGS="-static" ./configure --disable-channel --disable-gpm --disable-gtktest \
     --disable-gui --disable-netbeans --disable-nls --disable-selinux --disable-smack --disable-sysmouse \
