@@ -13,7 +13,7 @@ RUN apt update && apt install -y build-essential tar gdb lcov pkg-config \
 
 RUN mkdir -p /opt/python && mkdir -p /src && wget https://www.python.org/ftp/python/${app_version}/Python-${app_version}.tgz && tar -xzf Python-${app_version}.tgz -C /src 
 
-COPY ${app_version} /src/Python-${app_version}/Modules/Setup.local
+COPY Setup.local/${app_version} /src/Python-${app_version}/Modules/Setup.local
 
 RUN cd /src/Python-${app_version} && ./configure LDFLAGS="-static" --disable-shared --prefix=/packs/python --enable-optimizations --with-openssl=/usr/include/openssl 
 
