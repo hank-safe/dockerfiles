@@ -12,7 +12,7 @@ RUN wget -O vim.zip https://codeload.github.com/vim/vim/zip/refs/tags/v${app_ver
     LDFLAGS="-static" ./configure --disable-channel --disable-gpm --disable-gtktest \
     --disable-gui --disable-netbeans --disable-nls --disable-selinux --disable-smack --disable-sysmouse \
     --disable-xsmp --enable-multibyte --with-features=huge --without-x --with-tlib=ncursesw && \
-    make -j && \
+    make -j2 && \
     make install && \
     mkdir -p /out/vim && \
     cp -r /usr/local/* /out/vim && \
