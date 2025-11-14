@@ -1,4 +1,6 @@
-FROM alpine AS builder
+FROM ccr.ccs.tencentyun.com/hank997/alpine:3.20.3 AS builder
+
+# docker buildx build --build-arg app_version=2.2.8 --platform linux/amd64,linux/arm64 --tag crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-keepalived:2.2.8 --push .
 
 ARG app_version=2.2.8
 ARG PCRE_VERSION=8.45
@@ -25,23 +27,13 @@ RUN apk --no-cache add \
         openssl \
         openssl-dev \
         openssl-libs-static \
+        pcre2 \
+        pcre2-dev \
         autoconf \
         automake zlib-static  alpine-sdk linux-headers  libmnl-static git
 
-WORKDIR /build
 
-RUN wget -O pcre.tar.gz https://sourceforge.net/projects/pcre/files/pcre/${PCRE_VERSION}/pcre-${PCRE_VERSION}.tar.gz && \
-    tar xf pcre.tar.gz && \
-    cd pcre-${PCRE_VERSION} && \
-    CFLAGS="-O2 -pipe" LDFLAGS="-static" ./configure \
-        --prefix=/opt/static-pcre \
-        --disable-shared \
-        --enable-static \
-        --disable-cpp \
-        --enable-utf8 \
-        --enable-unicode-properties && \
-    make -j$(nproc) && \
-    make install
+WORKDIR /build
 
 RUN wget -O keepalived.tar.gz https://www.keepalived.org/software/keepalived-${app_version}.tar.gz && \
     tar xf keepalived.tar.gz && \
@@ -70,7 +62,7 @@ RUN wget -O keepalived.tar.gz https://www.keepalived.org/software/keepalived-${a
 
 WORKDIR /packs
 
-FROM alpine
+FROM ccr.ccs.tencentyun.com/hank997/alpine:3.20.3
 
 COPY --from=builder /packs /packs
 
