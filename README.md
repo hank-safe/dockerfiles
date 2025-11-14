@@ -25,8 +25,8 @@
 |wget|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-wget:1.24.5|[alpine/static-wget](alpine/static-wget)|linux/amd64,linux/arm64|
 
 ### rockylinux
-|name|镜像名称|路径|
-|---|---|---|
+|name|镜像名称|路径|架构|
+|---|---|---|---|
 |cfssl|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/binary-cfssl:1.6.5|[rockylinux/binary-cfssl](rockylinux/binary-cfssl)|linux/amd64|
 |cni|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/binary-cni:1.6.2|[rockylinux/binary-cni](rockylinux/binary-cni)|linux/amd64|
 |compose|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/binary-compose:2.31.0|[rockylinux/binary-compose](rockylinux/binary-compose)|linux/amd64|
@@ -42,16 +42,16 @@
 |sshpass|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/binary-sshpass:1.09|[rockylinux/binary-sshpass](rockylinux/binary-sshpass)|linux/amd64|
 
 ### debian
-|name|镜像名称|路径|
-|---|---|---|
+|name|镜像名称|路径|架构|
+|---|---|---|---|
 |openjdk8|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/openjdk:8u462-b08|[debian/openjdk/8](debian/openjdk/8)|linux/amd64,linux/arm64|
 |nacos|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/nacos:2.4.3|[debian/nacos](debian/nacos)|linux/amd64,linux/arm64|
 |tomcat|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/tomcat:9.0.112|[debian/tomcat](debian/tomcat)|linux/amd64,linux/arm64|
 
 ### ubuntu
 
-|name|镜像名称|路径|
-|---|---|---|
+|name|镜像名称|路径|架构|
+|---|---|---|---|
 |nginx-webdav|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/nginx-webdav:1.27.4|[ubuntu/nginx-webdav](ubuntu/nginx-webdav)|linux/amd64,linux/arm64|
 |ubuntu depends|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/ubuntu:deps|[ubuntu/depends](ubuntu/depends)|linux/amd64,linux/arm64|
 |python|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-python:3.11.6|[ubuntu/static-python](ubuntu/static-python)|linux/amd64,linux/arm64|
