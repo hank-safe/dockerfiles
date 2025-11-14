@@ -1,4 +1,4 @@
-FROM alpine AS builder
+FROM ccr.ccs.tencentyun.com/hank997/alpine:3.20.3 AS builder
 
 ARG app_version=0.12.20
 
@@ -9,16 +9,16 @@ WORKDIR /build
 RUN wget -O lrzsz.tar.gz  https://www.ohse.de/uwe/releases/lrzsz-${app_version}.tar.gz && \
     tar xf lrzsz.tar.gz && \
     cd lrzsz-${app_version} && \
-    CFLAGS=-static  ./configure --prefix=/packs/lrzsz LDFLAGS="-static" && \
-    make -j && \
+    CFLAGS=-static  ./configure --prefix=/packs/lrzsz --disable-nls LDFLAGS="-static" && \
+    make -j2 && \
     make install && \
-    strip /packs/lrzsz/bin/rz && \
-    strip /packs/lrzsz/bin/sz && \
+    strip /packs/lrzsz/bin/lrz && \
+    strip /packs/lrzsz/bin/lsz && \
     chown -R $(id -u):$(id -g) /packs/lrzsz
 
 WORKDIR /packs
 
-FROM alpine
+FROM ccr.ccs.tencentyun.com/hank997/alpine:3.20.3
 
 COPY --from=builder /packs /packs
 

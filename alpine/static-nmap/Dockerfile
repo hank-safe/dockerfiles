@@ -1,4 +1,4 @@
-FROM ccr.ccs.tencentyun.com/hank997/alpine:3.20.3 AS builder
+FROM alpine AS builder
 
 ARG app_version=7.95
 
@@ -23,7 +23,7 @@ RUN wget -O nmap.tar.gz https://nmap.org/dist/nmap-${app_version}.tgz && \
 WORKDIR /packs
 
 
-FROM ccr.ccs.tencentyun.com/hank997/alpine:3.20.3
+FROM alpine
 
 COPY --from=builder /packs /packs
 

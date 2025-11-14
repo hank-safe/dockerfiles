@@ -1,4 +1,4 @@
-FROM ccr.ccs.tencentyun.com/hank997/alpine:3.20.3 AS builder
+FROM alpine AS builder
 
 # docker buildx build --build-arg app_version=2.2.8 --platform linux/amd64,linux/arm64 --tag crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-keepalived:2.2.8 --push .
 
@@ -55,14 +55,14 @@ RUN wget -O keepalived.tar.gz https://www.keepalived.org/software/keepalived-${a
     --enable-nftables \
     --enable-regex \
     --enable-json  --with-init=systemd --enable-vrrp --enable-libnl-dynamic && \
-    make -j && \
+    make -j2 && \
     make DESTDIR=/packs/keepalived install && \
     strip /packs/keepalived/usr/sbin/keepalived && \
     chown -R $(id -u):$(id -g) /packs/keepalived
 
 WORKDIR /packs
 
-FROM ccr.ccs.tencentyun.com/hank997/alpine:3.20.3
+FROM alpine
 
 COPY --from=builder /packs /packs
 

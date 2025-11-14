@@ -1,8 +1,27 @@
 # dockerfiles
 
+在本地构建的方式
+
+```bash
+docker buildx rm multiarch
+docker buildx create --name multiarch --driver docker-container --use image=moby/buildkit:buildx-stable-1
+
+app_version=2.2.8
+platforms="linux/amd64,linux/arm64"
+image_tag=2.2.8
+image_name=static-keepalived
+
+docker buildx build --build-arg app_version=${app_version} --platform ${platforms} --tag crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/${image_name}:${image_tag} --push .
+
+#docker buildx build --build-arg app_version=0.12.20 --platform linux/amd64,linux/arm64 --tag crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-lrzsz:0.12.20 --push .
+```
+
 ## 镜像列表
 
 ### alpine
+
+> keepalived、lrzsz 在本地构建成功，在action构建失败
+
 |name|镜像名称|路径|架构|
 |---|---|---|---|
 |bmon|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-bmon:4.0|[alpine/static-bmon](alpine/static-bmon)|linux/amd64,linux/arm64|
@@ -13,8 +32,8 @@
 |htop|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-htop:3.4.1|[alpine/static-htop](alpine/static-htop)|linux/amd64,linux/arm64|
 |iotop|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-iotop:1.29|[alpine/static-iotop](alpine/static-iotop)|linux/amd64,linux/arm64|
 |jq|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-jq:1.8.1|[alpine/static-jq](alpine/static-jq)|linux/amd64,linux/arm64|
-|keepalived（暂时构建失败）|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-keepalived:2.2.8|[alpine/static-keepalived](alpine/static-keepalived)|linux/amd64,linux/arm64|
-|lrzsz（暂时构建失败）|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-lrzsz:0.12.20|[alpine/static-lrzsz](alpine/static-lrzsz)|linux/amd64,linux/arm64|
+|keepalived|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-keepalived:2.2.8|[alpine/static-keepalived](alpine/static-keepalived)|linux/amd64,linux/arm64|
+|lrzsz|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-lrzsz:0.12.20|[alpine/static-lrzsz](alpine/static-lrzsz)|linux/amd64,linux/arm64|
 |net-tools|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-net-tools:2.10|[alpine/static-net-tools](alpine/static-net-tools)|linux/amd64,linux/arm64|
 |netcat|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-netcat:0.7.1|[alpine/static-netcat](alpine/static-netcat)|linux/amd64,linux/arm64|
 |nmap（暂时构建失败）|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-nmap:7.95|[alpine/static-nmap](alpine/static-nmap)|linux/amd64,linux/arm64|
