@@ -22,6 +22,8 @@ docker buildx build --build-arg app_version=${app_version} --platform ${platform
 
 > keepalived、lrzsz 在本地构建成功，在action构建失败
 
+> nmap action构建失败，在有些机器构建也失败，可能跟CPU架构有关。 在 `Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz ` 构建成功。 在 `Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz` 构建失败。
+
 |name|镜像名称|路径|架构|
 |---|---|---|---|
 |bmon|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-bmon:4.0|[alpine/static-bmon](alpine/static-bmon)|linux/amd64,linux/arm64|
@@ -36,7 +38,7 @@ docker buildx build --build-arg app_version=${app_version} --platform ${platform
 |lrzsz|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-lrzsz:0.12.20|[alpine/static-lrzsz](alpine/static-lrzsz)|linux/amd64,linux/arm64|
 |net-tools|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-net-tools:2.10|[alpine/static-net-tools](alpine/static-net-tools)|linux/amd64,linux/arm64|
 |netcat|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-netcat:0.7.1|[alpine/static-netcat](alpine/static-netcat)|linux/amd64,linux/arm64|
-|nmap（暂时构建失败）|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-nmap:7.95|[alpine/static-nmap](alpine/static-nmap)|linux/amd64,linux/arm64|
+|nmap|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-nmap:7.95|[alpine/static-nmap](alpine/static-nmap)|linux/amd64,linux/arm64|
 |rsync|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-rsync:3.4.1|[alpine/static-rsync](alpine/static-rsync)|linux/amd64,linux/arm64|
 |tar|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-tar:1.35|[alpine/static-tar](alpine/static-tar)|linux/amd64,linux/arm64|
 |tcpdump|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-tcpdump:4.99.4|[alpine/static-tcpdump](alpine/static-tcpdump)|linux/amd64,linux/arm64|
