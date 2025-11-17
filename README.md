@@ -78,5 +78,5 @@ docker buildx build --build-arg app_version=${app_version} --platform ${platform
 |name|镜像名称|路径|架构|
 |---|---|---|---|
 |nginx-webdav|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/nginx-webdav:1.27.4|[ubuntu/nginx-webdav](ubuntu/nginx-webdav)|linux/amd64,linux/arm64|
-|ubuntu depends|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/ubuntu:deps|[ubuntu/depends](ubuntu/depends)|linux/amd64,linux/arm64|
+|ubuntu depends|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/ubuntu:deps|[ubuntu/depends](ubuntu/depends)|linux/amd64|
 |python|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-python:3.11.6|[ubuntu/static-python](ubuntu/static-python)|linux/amd64,linux/arm64|
