@@ -16,6 +16,8 @@ FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-
 FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-tcpdump:4.99.4 AS binary-tcpdump
 FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-vim:9.1.1901 AS binary-vim
 FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-wget:1.24.5 AS binary-wget
+FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-python:3.11.6 AS binary-python
+
 
 FROM alpine
 
@@ -36,4 +38,4 @@ COPY --from=binary-tar /packs/tar /packs/tar
 COPY --from=binary-tcpdump /packs/tcpdump /packs/tcpdump
 COPY --from=binary-vim /packs/vim /packs/vim
 COPY --from=binary-wget /packs/wget /packs/wget
-
+COPY --from=binary-python /packs/python /packs/python
