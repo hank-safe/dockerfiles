@@ -18,13 +18,15 @@ docker buildx build --build-arg app_version=${app_version} --platform ${platform
 
 ## 镜像列表
 
+|name|镜像名称|路径|架构|
+|---|---|---|---|
+|所有静态编译|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-all:1.0.0|[alpine/static-all](alpine/static-all)|linux/amd64,linux/arm64|
+
 ### alpine
 
 > keepalived、lrzsz 在本地构建成功，在action构建失败
 
 > nmap action构建失败，在有些机器构建也失败，可能跟CPU架构有关。 在 `Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz ` 构建成功。 在 `Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz` 构建失败。
-
-> `crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-all:1.0.0` 是静态编译的所有文件内容
 
 |name|镜像名称|路径|架构|
 |---|---|---|---|
