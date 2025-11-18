@@ -7,6 +7,8 @@ FROM debian:12.10-slim
 # 最新版本
 # https://github.com/adoptium/temurin8-binaries/releases
 
+# https://github.com/adoptium/containers/blob/main/8/jdk/ubuntu/jammy/Dockerfile  eclipse-temurin，这个没用过
+# https://github.com/docker-library/openjdk/blob/master/26/bookworm/Dockerfile  openjdk，下面的内容就是模仿这个
 LABEL maintainer "Hank"
 LABEL github "https://github.com/agocan"
 
