@@ -3,6 +3,8 @@
 在本地构建的方式
 
 ```bash
+docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+
 docker buildx rm multiarch
 docker buildx create --name multiarch --driver docker-container --use image=moby/buildkit:buildx-stable-1
 
