@@ -16,8 +16,18 @@ RUN wget -O vim.zip https://codeload.github.com/vim/vim/zip/refs/tags/v${app_ver
     make install && \
     mkdir -p /out/vim && \
     cp -r /usr/local/* /out/vim && \
-    wget -O /out/vim/share/vim/vim91/basic.vim https://raw.githubusercontent.com/amix/vimrc/refs/heads/master/vimrcs/basic.vim && \
-    echo 'set mouse-=a' >> /out/vim/share/vim/vim91/defaults.vim && \
+    case "$app_version" in \
+        '8.2*') vim_dir="vim82"; \
+        ;; \
+        '9.0*') vim_dir="vim90"; \
+        ;; \
+        '9.1*') vim_dir="vim91"; \
+        ;; \
+        *) echo >&2 "error: unsupported architecture: '$arch'"; exit 1; \
+        ;; \
+    esac; \
+    wget -O /out/vim/share/vim/${vim_dir}/basic.vim https://raw.githubusercontent.com/amix/vimrc/refs/heads/master/vimrcs/basic.vim && \
+    echo 'set mouse-=a' >> /out/vim/share/vim/${vim_dir}/defaults.vim && \
     strip /out/vim/bin/vim && \
     chown -R $(id -u):$(id -g) /out/vim && \
     mkdir -p /packs && \
