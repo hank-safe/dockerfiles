@@ -1,0 +1,58 @@
+" 基础配置
+set nocompatible
+syntax enable
+filetype plugin indent on
+set encoding=utf-8
+set number
+set relativenumber
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set smartindent
+set cursorline
+set mouse=a
+set backspace=indent,eol,start
+
+" vim-go配置
+let g:go_fmt_autosave = 1
+let g:go_imports_autosave = 1
+let g:go_imports_mode = 'goimports'
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_build_constraints = 1
+let g:go_auto_type_info = 1
+let g:go_def_mapping_enabled = 0
+let g:go_doc_keywordprg_enabled = 0
+let g:go_code_completion_enabled = 1
+
+" NERDTree配置
+let NERDTreeShowHidden=1
+let NERDTreeMinimalUI=1
+
+" 键盘映射
+nnoremap <leader>n :NERDTreeToggle<CR>
+nnoremap <F5> :GoRun<CR>
+nnoremap <F6> :GoTest<CR>
+nnoremap <F7> :GoBuild<CR>
+nnoremap <F8> :GoDebugStart<CR>
+nnoremap <leader>d :GoDef<CR>
+nnoremap <leader>r :GoReferrers<CR>
+nnoremap <leader>i :GoImplements<CR>
+nnoremap <leader>c :GoCoverageToggle<CR>
+nnoremap <leader>s :GoFillStruct<CR>
+
+" 自动命令
+autocmd FileType go nnoremap <buffer> <leader>t :GoTestFunc<CR>
+autocmd FileType go nnoremap <buffer> <leader>a :GoAlternate<CR>
+autocmd FileType go nnoremap <buffer> <leader>e :GoIfErr<CR>
+
+" 文件类型特定设置
+autocmd FileType go setlocal noexpandtab
+autocmd FileType go setlocal tabstop=4
+autocmd FileType go setlocal shiftwidth=4
+
+let mapleader = ","
