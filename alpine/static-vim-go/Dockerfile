@@ -1,14 +1,19 @@
 FROM alpine AS builder
 
 ARG app_version=9.1.1901
-ARG golang_version=1.21.6
+ARG golang_version=1.25.4
 
 RUN apk add gcc make musl-dev ncurses-static unzip git curl
 
 WORKDIR /build
 
 # 安装Go
-RUN wget -O go.tar.gz https://golang.org/dl/go${golang_version}.linux-amd64.tar.gz && \
+RUN case "$(arch)" in \
+        x86_64) arch_m="amd64" ;; \
+        aarch64) arch_m="arm64" ;; \
+        *) echo >&2 "error: unsupported version: '$app_version'"; exit 1 ;; \
+    esac && \
+    wget -O go.tar.gz https://golang.org/dl/go${golang_version}.linux-${arch_m}.tar.gz && \
     tar -C /usr/local -xzf go.tar.gz && \
     rm go.tar.gz
 
