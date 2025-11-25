@@ -87,6 +87,7 @@ COPY vimrc /vim/config/vimrc
 ENV PATH="/usr/local/go/bin:/usr/local/bin:$PATH"
 ENV GOPATH="/go"
 ENV VIMRUNTIME="/vim/share/vim91"
+ENV VIMINIT="source /vim/config/vimrc"
 
 # 创建符号链接和工作目录
 RUN ln -sf /vim/vim /usr/local/bin/vim && \
