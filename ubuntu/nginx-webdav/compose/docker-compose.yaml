@@ -1,0 +1,29 @@
+services:
+  # Nginx WebDAV 服务（负责处理根路径 / 的请求）
+  nginx-webdav:
+    restart: always
+    container_name: webdav-nginx
+    image: crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/nginx-webdav:1.27.4
+    volumes:
+      - ./nginx.conf:/usr/local/nginx/conf/nginx.conf  # 挂载自定义 Nginx 配置
+      - ./data/dav:/data/dav  # 共享数据目录（与 File Browser 一致）
+    ports:
+      - "80:80"
+    networks:
+      - web-network
+
+  # File Browser 服务（通过 /files 路径代理）
+  filebrowser:
+    restart: always
+    container_name: webdav-filebrowser
+    image: filebrowser/filebrowser:v2.32.0
+    volumes:
+      - ./data/dav:/data/dav  # 共享数据目录（与 Nginx WebDAV 一致）
+    environment:
+      - FB_BASEURL=/files  # 设置 File Browser 的根路径为 /files
+    networks:
+      - web-network
+
+networks:
+  web-network:  # 定义网络，键名后必须跟一个映射（即使为空）
+    driver: bridge  # 显式指定驱动（可选，默认即为 bridge）
