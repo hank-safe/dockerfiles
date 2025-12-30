@@ -55,7 +55,6 @@ _struct _struct.c
 _typing _typingmodule.c
 _zoneinfo _zoneinfo.c
 array arraymodule.c
-audioop audioop.c
 binascii binascii.c
 cmath cmathmodule.c
 math mathmodule.c
@@ -66,19 +65,12 @@ _posixsubprocess _posixsubprocess.c
 _posixshmem -I$(srcdir)/Modules/_multiprocessing _multiprocessing/posixshmem.c -lrt
 fcntl fcntlmodule.c
 grp grpmodule.c
-ossaudiodev ossaudiodev.c
 resource resource.c
-spwd spwdmodule.c
 syslog syslogmodule.c
 termios termios.c
 
 # hashing builtins
 _blake2 _blake2/blake2module.c _blake2/blake2b_impl.c _blake2/blake2s_impl.c
-_md5 md5module.c
-_sha1 sha1module.c
-#_sha256 sha256module.c
-#_sha512 sha512module.c
-#_sha3 _sha3/sha3module.c
 
 # text encodings and unicode
 _codecs_cn cjkcodecs/_codecs_cn.c
