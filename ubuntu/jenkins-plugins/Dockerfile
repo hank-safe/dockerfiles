@@ -1,0 +1,25 @@
+FROM jenkins/jenkins:2.485-jdk17
+RUN jenkins-plugin-cli --plugins \
+    cloudbees-folder \
+    antisamy-markup-formatter \
+    build-timeout \
+    credentials-binding \
+    timestamper \
+    ws-cleanup \
+    ant \
+    gradle \
+    github-branch-source \
+    gitlab-plugin \
+    workflow-aggregator \
+    pipeline-github-lib \
+    pipeline-graph-view \
+    git \
+    ssh-slaves \
+    matrix-auth \
+    pam-auth \
+    ldap \
+    email-ext \
+    mailer \
+    dark-theme \
+    localization-zh-cn \
+    -d /var/jenkins_home/plugins
