@@ -13,7 +13,7 @@ RUN wget https://sourceforge.net/projects/dos2unix/files/dos2unix/${app_version}
     make LDFLAGS="-static" LIBS="-lintl" && \
     make install prefix=/packs/dos2unix && \
     strip /packs/dos2unix/bin/dos2unix && \
-    chown -R $(id -u):$(id -g) /packs/chrony
+    chown -R $(id -u):$(id -g) /packs/dos2unix
 
 FROM alpine
 
