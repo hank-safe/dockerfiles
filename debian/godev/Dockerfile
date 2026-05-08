@@ -6,8 +6,8 @@ FROM golang:${app_version}
 # 安装一些依赖包，并且做好 ssh的配置
 RUN apt-get update && \
     apt-get install -y git vim wget openssh-server sudo screen && \
-    sed -i 's#mouse=a#mouse-=a#g' /usr/share/vim/vim82/defaults.vim || \
-    sed -i 's#mouse=a#mouse-=a#g' /usr/share/vim/vim90/defaults.vim && \
+    wget -O $(ls -d /usr/share/vim/vim*)/basic.vim https://raw.githubusercontent.com/amix/vimrc/refs/heads/master/vimrcs/basic.vim && \
+    sed -i 's#mouse=a#mouse-=a#g' $(ls -d /usr/share/vim/vim*)/defaults.vim || \
     sed -i 's@#PermitRootLogin prohibit-password@PermitRootLogin yes@g' /etc/ssh/sshd_config && \
     addgroup --gid 1008 normaluser && \
     adduser --system --disabled-password --home /home/normaluser -u 1008 --ingroup normaluser normaluser --shell /bin/bash && \
@@ -49,6 +49,16 @@ RUN echo "source /home/normaluser/set_env.sh" >> /etc/profile
 
 # 配置高亮
 RUN echo "alias ls='ls --color=auto'" >> /etc/profile
+
+RUN /usr/local/go/bin/go install github.com/uudashr/gopkgs/v2/cmd/gopkgs@latest && \
+    /usr/local/go/bin/go install github.com/ramya-rao-a/go-outline@latest && \
+    /usr/local/go/bin/go install github.com/cweill/gotests/gotests@latest && \
+    /usr/local/go/bin/go install github.com/fatih/gomodifytags@latest && \
+    /usr/local/go/bin/go install github.com/josharian/impl@latest && \
+    /usr/local/go/bin/go install github.com/haya14busa/goplay/cmd/goplay@latest && \
+    /usr/local/go/bin/go install github.com/go-delve/delve/cmd/dlv@latest && \
+    /usr/local/go/bin/go install honnef.co/go/tools/cmd/staticcheck@latest && \
+    /usr/local/go/bin/go install golang.org/x/tools/gopls@latest
 
 # https://stackoverflow.com/questions/56671520/how-can-i-install-vscode-server-in-linux-offline
 # 下载vscode的ssh插件
