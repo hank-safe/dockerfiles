@@ -12,17 +12,13 @@ RUN apt-get update && \
 RUN addgroup --gid 1008 normaluser && \
     adduser --system --disabled-password --home /home/normaluser -u 1008 --ingroup normaluser normaluser --shell /bin/bash && \
     echo normaluser ALL=\(ALL\) NOPASSWD:ALL >> /etc/sudoers && \
-    cp -a /etc/ssh/ /opt/ssh && \
-    chown -R normaluser:normaluser /opt/ssh && \
-    mkdir -p /run/sshd && \
     chown -R normaluser:normaluser /go
 
-# 把代码通通放进去，其实可以在里面用git命令拉取
-#COPY . /home/normaluser
 WORKDIR /home/normaluser
 
-# 配置 ssh的配置，然后使用它
-COPY sshd_config /opt/ssh/sshd_config
+RUN echo "Port 2222" >> /etc/ssh/sshd_config && \
+    echo "PermitRootLogin yes" >> /etc/ssh/sshd_config && \
+    echo "ChallengeResponseAuthentication no" >> /etc/ssh/sshd_config
 
 RUN echo 'normaluser:123456' |chpasswd && \
     echo 'root:123456' |chpasswd
