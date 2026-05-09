@@ -29,9 +29,6 @@ COPY sshd_config /opt/ssh/sshd_config
 RUN echo 'normaluser:123456' |chpasswd && \
     echo 'root:123456' |chpasswd
 
-# 配置高亮
-RUN echo "alias ls='ls --color=auto'" >> /etc/profile
-
 RUN node_version=24.15.0 && apt-get update && apt-get install -y xz-utils && \
     case "$(arch)" in \
         x86_64) arch_m="x64" ;; \
@@ -53,7 +50,8 @@ RUN sed -i '43asession        required      pam_env.so envfile=/etc/environment'
 RUN echo 'export PATH=/usr/local/node/bin:/go/bin:/usr/local/go/bin:$PATH' > /etc/profile.d/golang.sh && \
     echo 'export GOPATH=/go' >> /etc/profile.d/golang.sh && \
     echo 'export GOTOOLCHAIN=local' >> /etc/profile.d/golang.sh && \
-    echo 'export GOLANG_VERSION=${GOLANG_VERSION}' >> /etc/profile.d/golang.sh
+    echo 'export GOLANG_VERSION=${GOLANG_VERSION}' >> /etc/profile.d/golang.sh && \
+    echo "alias ls='ls --color=auto'" >> /etc/profile.d/alias.sh
 
 # 复制启动脚本，动态设置 /run/sshd 权限
 COPY start.sh /usr/local/bin/start.sh

@@ -3,6 +3,7 @@ version: '3.8'
 services:
   godev:
     image: crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/godev:1.26.3
+    # command: bash
     container_name: godev
     restart: unless-stopped
     ports:
@@ -11,6 +12,6 @@ services:
       - ./workspace:/home/normaluser/workspace
     environment:
       - TZ=Asia/Shanghai
-    user: normaluser
+    # user: normaluser
     stdin_open: true
     tty: true
