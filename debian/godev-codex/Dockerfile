@@ -37,16 +37,6 @@ RUN echo 'Port 2222' > /home/normaluser/ssh/sshd_config && \
 RUN echo 'normaluser:123456' |chpasswd && \
     echo 'root:123456' |chpasswd
 
-# 编写脚本，主要是为了启动的时候获取环境变量，然后ssh 登录的时候不丢失环境变量
-RUN echo '#!/bin/bash' > /home/normaluser/get_env.sh && \
-    echo 'for i in `env`' >> /home/normaluser/get_env.sh && \
-    echo 'do' >> /home/normaluser/get_env.sh && \
-    echo '    echo export $i >> /home/normaluser/set_env.sh' >> /home/normaluser/get_env.sh && \
-    echo 'done' >> /home/normaluser/get_env.sh
-
-# 加载环境变量
-RUN echo "source /home/normaluser/set_env.sh" >> /etc/profile
-
 # 配置高亮
 RUN echo "alias ls='ls --color=auto'" >> /etc/profile
 
@@ -74,6 +64,14 @@ RUN node_version=24.15.0 && apt-get update && apt-get install -y xz-utils && \
 ENV PATH=$PATH:/usr/local/node/bin
 
 RUN npm install -g @openai/codex
+
+RUN sed -i '43asession        required      pam_env.so envfile=/etc/environment' /etc/pam.d/sshd
+
+# 配置 Go 环境变量，确保 SSH 登录时也可用
+RUN echo 'export PATH=/usr/local/node/bin:/go/bin:/usr/local/go/bin:$PATH' > /etc/profile.d/golang.sh && \
+    echo 'export GOPATH=/go' >> /etc/profile.d/golang.sh && \
+    echo 'export GOTOOLCHAIN=local' >> /etc/profile.d/golang.sh && \
+    echo 'export GOLANG_VERSION=${GOLANG_VERSION}' >> /etc/profile.d/golang.sh
 
 # 启动命令，主要就是先获取环境变量，然后让sshd 前台运行即可
 CMD ["bash", "-c", "bash /home/normaluser/get_env.sh;/usr/sbin/sshd -D -f /home/normaluser/ssh/sshd_config"]

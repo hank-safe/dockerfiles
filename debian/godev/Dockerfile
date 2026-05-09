@@ -37,16 +37,6 @@ RUN echo 'Port 2222' > /home/normaluser/ssh/sshd_config && \
 RUN echo 'normaluser:123456' |chpasswd && \
     echo 'root:123456' |chpasswd
 
-# 编写脚本，主要是为了启动的时候获取环境变量，然后ssh 登录的时候不丢失环境变量
-RUN echo '#!/bin/bash' > /home/normaluser/get_env.sh && \
-    echo 'for i in `env`' >> /home/normaluser/get_env.sh && \
-    echo 'do' >> /home/normaluser/get_env.sh && \
-    echo '    echo export $i >> /home/normaluser/set_env.sh' >> /home/normaluser/get_env.sh && \
-    echo 'done' >> /home/normaluser/get_env.sh
-
-# 加载环境变量
-RUN echo "source /home/normaluser/set_env.sh" >> /etc/profile
-
 # 配置高亮
 RUN echo "alias ls='ls --color=auto'" >> /etc/profile
 
@@ -60,18 +50,13 @@ RUN /usr/local/go/bin/go install github.com/uudashr/gopkgs/v2/cmd/gopkgs@latest 
     /usr/local/go/bin/go install honnef.co/go/tools/cmd/staticcheck@latest && \
     /usr/local/go/bin/go install golang.org/x/tools/gopls@latest
 
-# https://stackoverflow.com/questions/56671520/how-can-i-install-vscode-server-in-linux-offline
-# 下载vscode的ssh插件
-# RUN commit_id=a21a160d630530476218b85db95b0fd2a8cd1230 && \
-#     vscode_bin_dir="/home/normaluser/.vscode-server/bin" && \
-#     [ ! -d ${vscode_bin_dir} ] && mkdir -p ${vscode_bin_dir} && rm ${vscode_bin_dir}/* -rf && \
-#     wget https://az764295.vo.msecnd.net/stable/${commit_id}/vscode-server-linux-x64.tar.gz -O ${vscode_bin_dir}/vscode-server-linux-x64.tar.gz --no-check-certificate && \
-#     tar -zxf ${vscode_bin_dir}/vscode-server-linux-x64.tar.gz && \
-#     mv vscode-server-linux-x64 ${vscode_bin_dir}/${commit_id} && \
-#     chown -R normaluser:normaluser /home/normaluser/.vscode-server
+RUN sed -i '43asession        required      pam_env.so envfile=/etc/environment' /etc/pam.d/sshd
 
-# 这条还得研究一下是为什么，加了之后，认证就不通过了，不加环境变量不对
-#RUN sed -i '43a/auth        required      pam_env.so envfile=/etc/environment' /etc/pam.d/sshd
+# 配置 Go 环境变量，确保 SSH 登录时也可用
+RUN echo 'export PATH=/go/bin:/usr/local/go/bin:$PATH' > /etc/profile.d/golang.sh && \
+    echo 'export GOPATH=/go' >> /etc/profile.d/golang.sh && \
+    echo 'export GOTOOLCHAIN=local' >> /etc/profile.d/golang.sh && \
+    echo 'export GOLANG_VERSION=${GOLANG_VERSION}' >> /etc/profile.d/golang.sh
 
-# 启动命令，主要就是先获取环境变量，然后让sshd 前台运行即可
-CMD ["bash", "-c", "bash /home/normaluser/get_env.sh;/usr/sbin/sshd -D -f /home/normaluser/ssh/sshd_config"]
+# 启动命令，让 sshd 前台运行即可
+CMD ["/usr/sbin/sshd", "-D", "-f", "/home/normaluser/ssh/sshd_config"]
