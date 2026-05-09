@@ -5,9 +5,14 @@ FROM golang:${app_version}
 
 # 安装一些依赖包，并且做好 ssh的配置
 RUN apt-get update && \
-    apt-get install -y git vim wget openssh-server sudo screen && \
+    apt-get install -y git vim wget openssh-server sudo screen locales && \
+    sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
+    locale-gen && \
     wget -O $(ls -d /usr/share/vim/vim*)/basic.vim https://raw.githubusercontent.com/amix/vimrc/refs/heads/master/vimrcs/basic.vim && \
-    sed -i 's#mouse=a#mouse-=a#g' $(ls -d /usr/share/vim/vim*)/defaults.vim 
+    sed -i 's#mouse=a#mouse-=a#g' $(ls -d /usr/share/vim/vim*)/defaults.vim
+
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
 
 RUN addgroup --gid 1008 normaluser && \
     adduser --system --disabled-password --home /home/normaluser -u 1008 --ingroup normaluser normaluser --shell /bin/bash && \
@@ -31,7 +36,9 @@ RUN echo 'export PATH=/go/bin:/usr/local/go/bin:$PATH' > /etc/profile.d/golang.s
     echo 'export GOPATH=/go' >> /etc/profile.d/golang.sh && \
     echo 'export GOTOOLCHAIN=local' >> /etc/profile.d/golang.sh && \
     echo 'export GOLANG_VERSION=${GOLANG_VERSION}' >> /etc/profile.d/golang.sh && \
-    echo "alias ls='ls --color=auto'" >> /etc/profile.d/alias.sh
+    echo "alias ls='ls --color=auto'" >> /etc/profile.d/alias.sh && \
+    echo "LANG=en_US.UTF-8" >> /etc/profile.d/locale.sh && \
+    echo "LC_ALL=en_US.UTF-8" >> /etc/profile.d/locale.sh
 
 # 复制启动脚本，动态设置 /run/sshd 权限
 COPY start.sh /usr/local/bin/start.sh
