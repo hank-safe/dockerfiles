@@ -1,13 +1,8 @@
 #!/bin/bash
 set -e
 
-# 动态设置 /run/sshd 权限
-if [ "$(id -u)" = "0" ]; then
-    # root 用户启动，确保 /run/sshd 属于 root
-    chown root:root /run/sshd
-else
-    # 非 root 用户启动
-    mkdir -p /run/sshd
-fi
+# 非 root 用户启动，确保 /run/sshd 目录存在
+mkdir -p /run/sshd
 
-/usr/sbin/sshd -D -f /opt/ssh/sshd_config 
+# 使用 sudo 以 root 身份启动 sshd
+sudo /usr/sbin/sshd -D -f /opt/ssh/sshd_config

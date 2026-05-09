@@ -15,7 +15,6 @@ RUN addgroup --gid 1008 normaluser && \
     cp -a /etc/ssh/ /opt/ssh && \
     chown -R normaluser:normaluser /opt/ssh && \
     mkdir -p /run/sshd && \
-    chown -R normaluser:normaluser /run/sshd && \
     chown -R normaluser:normaluser /go
     
 #USER normaluser

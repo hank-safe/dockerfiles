@@ -15,10 +15,8 @@ RUN addgroup --gid 1008 normaluser && \
     cp -a /etc/ssh/ /opt/ssh && \
     chown -R normaluser:normaluser /opt/ssh && \
     mkdir -p /run/sshd && \
-    chown -R normaluser:normaluser /run/sshd && \
     chown -R normaluser:normaluser /go
 
-#USER normaluser
 # 把代码通通放进去，其实可以在里面用git命令拉取
 #COPY . /home/normaluser
 WORKDIR /home/normaluser

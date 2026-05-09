@@ -12,6 +12,6 @@ services:
       - ./workspace:/home/normaluser/workspace
     environment:
       - TZ=Asia/Shanghai
-    # user: normaluser
+    user: normaluser
     stdin_open: true
     tty: true
