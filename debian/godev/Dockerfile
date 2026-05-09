@@ -17,7 +17,7 @@ RUN addgroup --gid 1008 normaluser && \
     mkdir -p /run/sshd && \
     chown -R normaluser:normaluser /run/sshd && \
     chown -R normaluser:normaluser /go
-    
+
 #USER normaluser
 # 把代码通通放进去，其实可以在里面用git命令拉取
 #COPY . /home/normaluser
@@ -31,16 +31,6 @@ RUN echo 'normaluser:123456' |chpasswd && \
 
 # 配置高亮
 RUN echo "alias ls='ls --color=auto'" >> /etc/profile
-
-RUN /usr/local/go/bin/go install github.com/uudashr/gopkgs/v2/cmd/gopkgs@latest && \
-    /usr/local/go/bin/go install github.com/ramya-rao-a/go-outline@latest && \
-    /usr/local/go/bin/go install github.com/cweill/gotests/gotests@latest && \
-    /usr/local/go/bin/go install github.com/fatih/gomodifytags@latest && \
-    /usr/local/go/bin/go install github.com/josharian/impl@latest && \
-    /usr/local/go/bin/go install github.com/haya14busa/goplay/cmd/goplay@latest && \
-    /usr/local/go/bin/go install github.com/go-delve/delve/cmd/dlv@latest && \
-    /usr/local/go/bin/go install honnef.co/go/tools/cmd/staticcheck@latest && \
-    /usr/local/go/bin/go install golang.org/x/tools/gopls@latest
 
 RUN sed -i '43asession        required      pam_env.so envfile=/etc/environment' /etc/pam.d/sshd
 

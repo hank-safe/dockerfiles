@@ -32,16 +32,6 @@ RUN echo 'normaluser:123456' |chpasswd && \
 # 配置高亮
 RUN echo "alias ls='ls --color=auto'" >> /etc/profile
 
-RUN /usr/local/go/bin/go install github.com/uudashr/gopkgs/v2/cmd/gopkgs@latest && \
-    /usr/local/go/bin/go install github.com/ramya-rao-a/go-outline@latest && \
-    /usr/local/go/bin/go install github.com/cweill/gotests/gotests@latest && \
-    /usr/local/go/bin/go install github.com/fatih/gomodifytags@latest && \
-    /usr/local/go/bin/go install github.com/josharian/impl@latest && \
-    /usr/local/go/bin/go install github.com/haya14busa/goplay/cmd/goplay@latest && \
-    /usr/local/go/bin/go install github.com/go-delve/delve/cmd/dlv@latest && \
-    /usr/local/go/bin/go install honnef.co/go/tools/cmd/staticcheck@latest && \
-    /usr/local/go/bin/go install golang.org/x/tools/gopls@latest
-
 RUN node_version=24.15.0 && apt-get update && apt-get install -y xz-utils && \
     case "$(arch)" in \
         x86_64) arch_m="x64" ;; \
