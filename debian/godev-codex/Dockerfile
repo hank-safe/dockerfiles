@@ -60,7 +60,7 @@ RUN /usr/local/go/bin/go install github.com/uudashr/gopkgs/v2/cmd/gopkgs@latest 
     /usr/local/go/bin/go install honnef.co/go/tools/cmd/staticcheck@latest && \
     /usr/local/go/bin/go install golang.org/x/tools/gopls@latest
 
-RUN node_version=24.15.0 && \
+RUN node_version=24.15.0 && apt-get update && apt-get install -y xz-utils \
     case "$(arch)" in \
         x86_64) arch_m="x64" ;; \
         aarch64) arch_m="arm64" ;; \
