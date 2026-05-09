@@ -65,5 +65,8 @@ RUN echo 'export PATH=/usr/local/node/bin:/go/bin:/usr/local/go/bin:$PATH' > /et
     echo 'export GOTOOLCHAIN=local' >> /etc/profile.d/golang.sh && \
     echo 'export GOLANG_VERSION=${GOLANG_VERSION}' >> /etc/profile.d/golang.sh
 
-# 启动命令，让 sshd 前台运行即可
-CMD ["/usr/sbin/sshd", "-D", "-f", "/opt/ssh/sshd_config"]
+# 复制启动脚本，动态设置 /run/sshd 权限
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
+CMD ["/usr/local/bin/start.sh"]

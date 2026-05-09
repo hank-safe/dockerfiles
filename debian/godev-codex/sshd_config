@@ -1,10 +1,10 @@
 Port 2222
 PermitRootLogin yes
-HostKey /home/normaluser/ssh/ssh_host_rsa_key
-HostKey /home/normaluser/ssh/ssh_host_ecdsa_key
-HostKey /home/normaluser/ssh/ssh_host_ed25519_key
+HostKey /opt/ssh/ssh_host_rsa_key
+HostKey /opt/ssh/ssh_host_ecdsa_key
+HostKey /opt/ssh/ssh_host_ed25519_key
 AuthorizedKeysFile .ssh/authorized_keys
 ChallengeResponseAuthentication no
 UsePAM yes
 Subsystem sftp /usr/lib/openssh/sftp-server
-PidFile /home/normaluser/ssh/sshd.pid
+PidFile /opt/ssh/sshd.pid
