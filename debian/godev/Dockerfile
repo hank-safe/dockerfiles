@@ -12,7 +12,8 @@ RUN apt-get update && \
 RUN addgroup --gid 1008 normaluser && \
     adduser --system --disabled-password --home /home/normaluser -u 1008 --ingroup normaluser normaluser --shell /bin/bash && \
     echo normaluser ALL=\(ALL\) NOPASSWD:ALL >> /etc/sudoers && \
-    chown -R normaluser:normaluser /go
+    chown -R normaluser:normaluser /go && \
+    echo "alias ls='ls --color=auto'" >> /home/normaluser/.bashrc
 
 WORKDIR /home/normaluser
 
