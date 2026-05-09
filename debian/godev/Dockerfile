@@ -7,32 +7,24 @@ FROM golang:${app_version}
 RUN apt-get update && \
     apt-get install -y git vim wget openssh-server sudo screen && \
     wget -O $(ls -d /usr/share/vim/vim*)/basic.vim https://raw.githubusercontent.com/amix/vimrc/refs/heads/master/vimrcs/basic.vim && \
-    sed -i 's#mouse=a#mouse-=a#g' $(ls -d /usr/share/vim/vim*)/defaults.vim || \
-    sed -i 's@#PermitRootLogin prohibit-password@PermitRootLogin yes@g' /etc/ssh/sshd_config && \
-    addgroup --gid 1008 normaluser && \
+    sed -i 's#mouse=a#mouse-=a#g' $(ls -d /usr/share/vim/vim*)/defaults.vim 
+
+RUN addgroup --gid 1008 normaluser && \
     adduser --system --disabled-password --home /home/normaluser -u 1008 --ingroup normaluser normaluser --shell /bin/bash && \
     echo normaluser ALL=\(ALL\) NOPASSWD:ALL >> /etc/sudoers && \
-    cp -a /etc/ssh/ /home/normaluser/ssh && \
-    chown -R normaluser:normaluser /home/normaluser && \
+    cp -a /etc/ssh/ /opt/ssh && \
+    chown -R normaluser:normaluser /opt/ssh && \
     mkdir -p /run/sshd && \
     chown -R normaluser:normaluser /run/sshd && \
     chown -R normaluser:normaluser /go
+    
 #USER normaluser
 # 把代码通通放进去，其实可以在里面用git命令拉取
 #COPY . /home/normaluser
 WORKDIR /home/normaluser
 
 # 配置 ssh的配置，然后使用它
-RUN echo 'Port 2222' > /home/normaluser/ssh/sshd_config && \
-    echo 'PermitRootLogin yes' >> /home/normaluser/ssh/sshd_config && \
-    echo HostKey /home/normaluser/ssh/ssh_host_rsa_key >> /home/normaluser/ssh/sshd_config && \
-    echo HostKey /home/normaluser/ssh/ssh_host_ecdsa_key >> /home/normaluser/ssh/sshd_config && \
-    echo HostKey /home/normaluser/ssh/ssh_host_ed25519_key >> /home/normaluser/ssh/sshd_config && \
-    echo AuthorizedKeysFile  .ssh/authorized_keys >> /home/normaluser/ssh/sshd_config && \
-    echo ChallengeResponseAuthentication no >> /home/normaluser/ssh/sshd_config && \
-    echo UsePAM yes >> /home/normaluser/ssh/sshd_config && \
-    echo Subsystem       sftp    /usr/lib/openssh/sftp-server >> /home/normaluser/ssh/sshd_config && \
-    echo PidFile /home/normaluser/ssh/sshd.pid >> /home/normaluser/ssh/sshd_config
+COPY sshd_config /opt/ssh/sshd_config
 
 RUN echo 'normaluser:123456' |chpasswd && \
     echo 'root:123456' |chpasswd
@@ -59,4 +51,4 @@ RUN echo 'export PATH=/go/bin:/usr/local/go/bin:$PATH' > /etc/profile.d/golang.s
     echo 'export GOLANG_VERSION=${GOLANG_VERSION}' >> /etc/profile.d/golang.sh
 
 # 启动命令，让 sshd 前台运行即可
-CMD ["/usr/sbin/sshd", "-D", "-f", "/home/normaluser/ssh/sshd_config"]
+CMD ["/usr/sbin/sshd", "-D", "-f", "/opt/ssh/sshd_config"]
