@@ -75,6 +75,7 @@ docker buildx build --build-arg app_version=${app_version} --platform ${platform
 |openjdk8|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/openjdk:8u462-b08|[debian/openjdk/8](debian/openjdk/8)|linux/amd64,linux/arm64|
 |nacos|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/nacos:2.4.3|[debian/nacos](debian/nacos)|linux/amd64,linux/arm64|
 |tomcat|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/tomcat:9.0.112|[debian/tomcat](debian/tomcat)|linux/amd64,linux/arm64|
+|go开发环境|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/godev:1.26.3|[debian/godev](debian/godev)|linux/amd64,linux/arm64|
 
 ### ubuntu
 
