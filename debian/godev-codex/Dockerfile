@@ -60,4 +60,15 @@ RUN echo 'export PATH=/usr/local/node/bin:/go/bin:/usr/local/go/bin:$PATH' > /et
 COPY start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
+COPY ssh /home/normaluser/.ssh
+COPY ssh /root/.ssh
+RUN chown -R normaluser:normaluser /home/normaluser/.ssh && \
+    chown -R root:root /root/.ssh && \
+    chmod 700 /home/normaluser/.ssh && \
+    chmod 600 /home/normaluser/.ssh/* && \
+    chmod 644 /home/normaluser/.ssh/id_rsa.pub && \
+    chmod 700 /root/.ssh && \
+    chmod 600 /root/.ssh/* && \
+    chmod 644 /root/.ssh/id_rsa.pub
+
 CMD ["/usr/local/bin/start.sh"]
