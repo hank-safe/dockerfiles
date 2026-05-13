@@ -7,7 +7,7 @@ printenv | grep -v '^_=' | while IFS='=' read -r key value; do
     # 跳过空 key 或包含特殊字符的 key
     [[ -z "$key" || "$key" =~ [^a-zA-Z0-9_] ]] && continue
     printf '%s="%s"\n' "$key" "$value"
-done > /etc/environment
+done | sudo tee /etc/environment > /dev/null
 
 # 使用 sudo 以 root 身份启动 sshd
 sudo /usr/sbin/sshd -D
