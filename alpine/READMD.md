@@ -1,10 +1,11 @@
 # Alpine Static Components - 待新增组件清单
 
-## 已有组件 (21个)
+## 已有组件 (22个)
 
 | 组件 | 说明 |
 |------|------|
 | static-all | 全量组件 |
+| static-bind | DNS 工具（dig / nslookup / host / nsupdate） |
 | static-bmon | 带宽监控 |
 | static-chrony | 时间同步 |
 | static-curl | HTTP 客户端 |
@@ -40,8 +41,8 @@
 ## 中优先级（场景化）
 
 - [ ] **static-openssl** — SSL/TLS/加密工具链
-- [ ] **static-dig** — DNS 排查
-- [ ] **static-nslookup** — DNS 查询
+- [x] **static-dig** — DNS 排查（已合并至 static-bind）
+- [x] **static-nslookup** — DNS 查询（已合并至 static-bind）
 - [ ] **static-screen** — 终端复用
 - [ ] **static-tmux** — 终端复用
 - [ ] **static-less** — 文件查看器
