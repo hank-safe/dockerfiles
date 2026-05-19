@@ -51,6 +51,7 @@ docker buildx build --build-arg app_version=${app_version} --platform ${platform
 |vim|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-vim:9.1.1901|[alpine/static-vim](alpine/static-vim)|linux/amd64,linux/arm64|
 |wget|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-wget:1.24.5|[alpine/static-wget](alpine/static-wget)|linux/amd64,linux/arm64|
 |dos2unix|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-dos2unix:7.5.4|[alpine/static-dos2unix](alpine/static-dos2unix)|linux/amd64,linux/arm64|
+|bind|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-bind:9.16.50|[alpine/static-bind](alpine/static-bind)|linux/amd64,linux/arm64|
 
 ### rockylinux
 |name|镜像名称|路径|架构|
