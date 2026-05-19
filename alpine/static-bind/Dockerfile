@@ -25,7 +25,16 @@ RUN wget -O bind.tar.xz https://downloads.isc.org/isc/bind9/${app_version}/bind-
         --prefix /packs/bind \
         --without-python \
         --enable-static \
-        --with-openssl --enable-full-report && \
+        --with-openssl \
+        --disable-linux-caps \
+        --without-libjson \
+        --without-libxml2 \
+        --without-zlib \
+        --without-lmdb \
+        --without-gssapi \
+        --without-readline \
+        --without-idn \
+        --enable-full-report && \
     make -j$(nproc) && \
     make install && \
     strip /packs/bind/bin/dig && \
