@@ -5,7 +5,7 @@ FROM alpine AS builder
 
 ARG app_version=9.16.50
 
-RUN apk add gcc g++ make libtool pkgconf perl perl-dev python3 && \
+RUN apk add gcc g++ make libtool pkgconf perl perl-dev perl-doc python3 && \
     apk add openssl-dev openssl-libs-static && \
     apk add libuv-dev libuv-static && \
     apk add linux-headers musl-dev && \
