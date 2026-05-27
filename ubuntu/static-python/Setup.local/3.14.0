@@ -1,95 +1,16 @@
 # -*- makefile -*-
-
-# ---
-# Built-in modules required to get a functioning interpreter;
-# cannot be built as shared!
+# Python 3.14+
+# 3.12 起 configure 会自动生成 Modules/Setup.stdlib，其中包含所有标准模块的
+# 源文件路径和编译参数。只需在此声明 *static*，所有模块将被静态链入 python
+# 可执行文件，无需手动列出（手动列出反而会因源文件路径变更或重复定义出错）。
+#
+# 3.14 的主要变化（在 3.13 基础上）：
+#   - 删除：asynchat asyncore smtpd lib2to3
+#   - _ctypes 源码结构重构
+#   - HACL* 新增更多 SIMD 变体文件
+#   - 新增：_zstd（需要 apt install libzstd-dev）、_remote_debugging
+#
+# 如需 _zstd 模块，在 Dockerfile 的 apt install 中加入 libzstd-dev 即可，
+# configure 会自动检测并加入 Setup.stdlib。
 *static*
-
-# SSL/TLS support
-_ssl _ssl.c -lssl -lcrypto
-_hashlib _hashopenssl.c -lssl -lcrypto
-
-# module C APIs are used in core
-atexit atexitmodule.c
-faulthandler faulthandler.c
-posix posixmodule.c
-_signal signalmodule.c
-_tracemalloc _tracemalloc.c
-
-# modules used by importlib, deepfreeze, freeze, runpy, and sysconfig
-_codecs _codecsmodule.c
-_collections _collectionsmodule.c
-errno errnomodule.c
-_io _io/_iomodule.c _io/iobase.c _io/fileio.c _io/bytesio.c _io/bufferedio.c _io/textio.c _io/stringio.c
-itertools itertoolsmodule.c
-_sre _sre/sre.c
-_thread _threadmodule.c
-time timemodule.c
-_weakref _weakref.c
-
-# commonly used core modules
-_abc _abc.c
-_functools _functoolsmodule.c
-_locale _localemodule.c
-_operator _operator.c
-_stat _stat.c
-_symtable symtablemodule.c
-
-_asyncio _asynciomodule.c
-_bisect _bisectmodule.c
-_csv _csv.c
-_datetime _datetimemodule.c
-_decimal _decimal/_decimal.c
-_heapq _heapqmodule.c
-_json _json.c
-_lsprof _lsprof.c rotatingtree.c
-_multiprocessing -I$(srcdir)/Modules/_multiprocessing _multiprocessing/multiprocessing.c _multiprocessing/semaphore.c
-_opcode _opcode.c
-_pickle _pickle.c
-_queue _queuemodule.c
-_random _randommodule.c
-_socket socketmodule.c
-_statistics _statisticsmodule.c
-_struct _struct.c
-_typing _typingmodule.c
-_zoneinfo _zoneinfo.c
-array arraymodule.c
-binascii binascii.c
-cmath cmathmodule.c
-math mathmodule.c
-mmap mmapmodule.c
-select selectmodule.c
-
-_posixsubprocess _posixsubprocess.c
-_posixshmem -I$(srcdir)/Modules/_multiprocessing _multiprocessing/posixshmem.c -lrt
-fcntl fcntlmodule.c
-grp grpmodule.c
-resource resource.c
-#spwd spwdmodule.c
-syslog syslogmodule.c
-termios termios.c
-
-# hashing builtins
-_md5 md5module.c
-_sha1 sha1module.c
-
-# text encodings and unicode
-_codecs_cn cjkcodecs/_codecs_cn.c
-_codecs_hk cjkcodecs/_codecs_hk.c
-_codecs_iso2022 cjkcodecs/_codecs_iso2022.c
-_codecs_jp cjkcodecs/_codecs_jp.c
-_codecs_kr cjkcodecs/_codecs_kr.c
-_codecs_tw cjkcodecs/_codecs_tw.c
-_multibytecodec cjkcodecs/multibytecodec.c
-unicodedata unicodedata.c
-
-_bz2 _bz2module.c -lbz2
-_ctypes _ctypes/_ctypes.c _ctypes/callbacks.c _ctypes/callproc.c _ctypes/stgdict.c _ctypes/cfield.c -ldl -lffi -DHAVE_FFI_PREP_CIF_VAR -DHAVE_FFI_PREP_CLOSURE_LOC -DHAVE_FFI_CLOSURE_ALLOC
-# The _dbm module supports NDBM, GDBM with compat module, and Berkeley DB.
-_dbm _dbmmodule.c -lgdbm_compat -DUSE_GDBM_COMPAT
-_gdbm _gdbmmodule.c -lgdbm
-_lzma _lzmamodule.c -llzma
-#_uuid _uuidmodule.c -luuid
-zlib  zlibmodule.c -lz
-pyexpat pyexpat.c
 
