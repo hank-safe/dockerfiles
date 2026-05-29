@@ -133,8 +133,8 @@ RUN mkdir -p /packs && cd /opt && \
     PLACEHOLDER_DIR=$(basename ${PLACEHOLDER_PREFIX}) && \
     tar --owner=0 --group=0 \
         --transform "s|^${PLACEHOLDER_DIR}|payload|" \
-        -cf - ${PLACEHOLDER_DIR} /tmp/text-files.lst /tmp/bin-files.lst 2>/dev/null \
-        | zstd -19 -T0 -o /packs/payload.tar.zst
+        -czf /packs/payload.tar.gz \
+        ${PLACEHOLDER_DIR} /tmp/text-files.lst /tmp/bin-files.lst 2>/dev/null
 
 # -------- 拼接 installer-head.sh + payload 生成自解压 sh -------------------
 COPY installer-head.sh /packs/installer-head.sh
@@ -143,7 +143,7 @@ RUN set -eux; \
     sed -e "s|@@APP_VERSION@@|${app_version}|g" \
         -e "s|@@PLACEHOLDER_PREFIX@@|${PLACEHOLDER_PREFIX}|g" \
         /packs/installer-head.sh > /packs/_head.sh; \
-    cat /packs/_head.sh /packs/payload.tar.zst > /packs/python-${app_version}-installer.sh; \
+    cat /packs/_head.sh /packs/payload.tar.gz > /packs/python-${app_version}-installer.sh; \
     chmod +x /packs/python-${app_version}-installer.sh; \
     ls -lh /packs/python-${app_version}-installer.sh
 

@@ -73,7 +73,7 @@ TMPDIR="$(mktemp -d)"
 trap 'rm -rf "$TMPDIR"' EXIT
 
 echo "[1/3] Extracting payload ..."
-tail -n +"$ARCHIVE_LINE" "$0" | zstd -d -T0 | tar -xf - -C "$TMPDIR"
+tail -n +"$ARCHIVE_LINE" "$0" | tar -xzf - -C "$TMPDIR"
 
 # payload 解出来是 $TMPDIR/payload/...
 mv "$TMPDIR"/payload/* "$PREFIX"/
