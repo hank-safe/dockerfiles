@@ -89,6 +89,7 @@ RUN PLACEHOLDER_PREFIX=$(cat /PLACEHOLDER_PREFIX) && \
 # 注意：glibc 系列（libc/libdl/libm/libpthread/libnsl/libresolv/libutil/librt
 # 以及 ld-linux*）严禁打包——必须用目标机器自己的 glibc，否则 NSS/locale 全崩
 RUN set -eux; \
+    PLACEHOLDER_PREFIX=$(cat /PLACEHOLDER_PREFIX); \
     mkdir -p ${PLACEHOLDER_PREFIX}/lib; \
     bins="${PLACEHOLDER_PREFIX}/bin/python3"; \
     bins="$bins $(find ${PLACEHOLDER_PREFIX}/lib -name '*.so*' 2>/dev/null)"; \
@@ -107,7 +108,8 @@ RUN set -eux; \
     done
 
 # -------- 记录最低 glibc 要求（manylinux2014 通常 = 2.17） -----------------
-RUN min_glibc=$(objdump -T ${PLACEHOLDER_PREFIX}/bin/python3 \
+RUN PLACEHOLDER_PREFIX=$(cat /PLACEHOLDER_PREFIX) && \
+    min_glibc=$(objdump -T ${PLACEHOLDER_PREFIX}/bin/python3 \
         ${PLACEHOLDER_PREFIX}/lib/*.so* 2>/dev/null \
         | awk '/GLIBC_/ {gsub(/[()]/,"",$5); print $5}' \
         | sed 's/GLIBC_//' | sort -uV | tail -n1) ; \
@@ -115,7 +117,9 @@ RUN min_glibc=$(objdump -T ${PLACEHOLDER_PREFIX}/bin/python3 \
     echo "Built against max glibc symbol = $min_glibc"
 
 # -------- 写入 manifest，记录需要前缀替换的文件 ----------------------------
-RUN set -eux; cd ${PLACEHOLDER_PREFIX}; \
+RUN set -eux; \
+    PLACEHOLDER_PREFIX=$(cat /PLACEHOLDER_PREFIX); \
+    cd ${PLACEHOLDER_PREFIX}; \
     find . -type f \( -name '*.py' -o -name '*.cfg' -o -name '*.conf' \
         -o -name '*.txt' -o -name '*.pc' -o -name '*.sh' \) > /tmp/text-files.lst; \
     find . -type f \( -perm -u+x -o -name '*.so' -o -name '*.so.*' \) > /tmp/bin-files.lst; \
@@ -125,6 +129,7 @@ RUN set -eux; cd ${PLACEHOLDER_PREFIX}; \
 
 # -------- 打包：tar.zst payload --------------------------------------------
 RUN mkdir -p /packs && cd /opt && \
+    PLACEHOLDER_PREFIX=$(cat /PLACEHOLDER_PREFIX) && \
     PLACEHOLDER_DIR=$(basename ${PLACEHOLDER_PREFIX}) && \
     tar --owner=0 --group=0 \
         --transform "s|^${PLACEHOLDER_DIR}|payload|" \
@@ -134,6 +139,7 @@ RUN mkdir -p /packs && cd /opt && \
 # -------- 拼接 installer-head.sh + payload 生成自解压 sh -------------------
 COPY installer-head.sh /packs/installer-head.sh
 RUN set -eux; \
+    PLACEHOLDER_PREFIX=$(cat /PLACEHOLDER_PREFIX); \
     sed -e "s|@@APP_VERSION@@|${app_version}|g" \
         -e "s|@@PLACEHOLDER_PREFIX@@|${PLACEHOLDER_PREFIX}|g" \
         /packs/installer-head.sh > /packs/_head.sh; \
