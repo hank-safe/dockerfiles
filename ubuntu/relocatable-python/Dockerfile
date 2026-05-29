@@ -33,8 +33,11 @@ ENV app_version=${app_version}
 ARG BUILD_THREADS=8
 ENV BUILD_THREADS=${BUILD_THREADS}
 
-# 占位前缀：固定 255 字符（和 conda 一致），后面会被替换为真实路径
-ENV PLACEHOLDER_PREFIX=/opt/_python_relocatable_placeholder_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+# 占位前缀总长度（和 conda 一致默认 255）。可以通过 --build-arg 调整。
+ARG PLACEHOLDER_LEN=255
+ENV PLACEHOLDER_LEN=${PLACEHOLDER_LEN}
+# 占位前缀的"基础部分"，剩余长度由构建脚本用 'a' 自动填充，避免手数字符出错
+ENV PLACEHOLDER_BASE=/opt/_python_relocatable_placeholder_
 
 # manylinux2014 已内置 devtoolset-10、autoconf、make、wget、各种 -devel
 # 这里补充几个 yum 包；openssl 1.1.1 镜像里已经在 /usr/local 编译好了
@@ -56,12 +59,23 @@ RUN mkdir -p /src && cd /src && \
     wget -q https://www.python.org/ftp/python/${app_version}/Python-${app_version}.tgz && \
     tar -xzf Python-${app_version}.tgz
 
-# -------- 校验占位前缀长度 -------------------------------------------------
-RUN test "$(printf %s "${PLACEHOLDER_PREFIX}" | wc -c)" = "255" \
-    && echo "PLACEHOLDER_PREFIX length OK (255)"
+# -------- 生成占位前缀（基础串 + 'a' 填充到 PLACEHOLDER_LEN）---------------
+# 把最终前缀写入 /PLACEHOLDER_PREFIX，后续每个 RUN 都通过 $(cat ...) 读取
+RUN set -eux; \
+    base_len=$(printf %s "${PLACEHOLDER_BASE}" | wc -c); \
+    if [ "$base_len" -ge "${PLACEHOLDER_LEN}" ]; then \
+        echo "ERROR: PLACEHOLDER_BASE already >= PLACEHOLDER_LEN"; exit 1; \
+    fi; \
+    pad_len=$((PLACEHOLDER_LEN - base_len)); \
+    pad=$(printf 'a%.0s' $(seq 1 $pad_len)); \
+    printf '%s%s' "${PLACEHOLDER_BASE}" "$pad" > /PLACEHOLDER_PREFIX; \
+    actual=$(wc -c < /PLACEHOLDER_PREFIX); \
+    test "$actual" = "${PLACEHOLDER_LEN}"; \
+    echo "PLACEHOLDER_PREFIX length OK (${actual}): $(cat /PLACEHOLDER_PREFIX)"
 
 # -------- 编译：动态库 + RPATH=$ORIGIN/../lib ------------------------------
-RUN cd /src/Python-${app_version} && \
+RUN PLACEHOLDER_PREFIX=$(cat /PLACEHOLDER_PREFIX) && \
+    cd /src/Python-${app_version} && \
     ./configure \
         --prefix=${PLACEHOLDER_PREFIX} \
         --enable-shared \
