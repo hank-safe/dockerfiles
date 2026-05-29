@@ -9,16 +9,23 @@
 #   3) 把成品打成 tar.zst，拼接到 installer-head.sh 后面，生成单文件 .sh
 #   4) 安装时脚本自解压 + 遍历所有文本/二进制把占位前缀替换为用户真实路径
 #
+# 为什么用 manylinux2014：
+#   - 基于 CentOS 7，glibc 2.17，覆盖几乎所有还在用的 Linux
+#     （RHEL/CentOS 7+、Ubuntu 16.04+、Debian 9+）
+#   - CentOS 7 官方源已 EOL，quay.io/pypa/manylinux2014_x86_64 由 PyPA 维护，
+#     yum 源指向 vault.centos.org，内置 devtoolset-10 (gcc 10) 及常用 -devel
+#   - glibc 只能向后兼容：用老 glibc 编出来的可以跑在新系统上，反之不行
+#
 # 用法：
 #   docker build -t relocatable-python:3.11.6 \
 #       --build-arg app_version=3.11.6 ubuntu/relocatable-python
 #   docker run --rm -v $PWD:/out relocatable-python:3.11.6 \
 #       cp /packs/python-3.11.6-installer.sh /out/
-#   # 然后在任意机器上：
+#   # 然后在任意 glibc >= 2.17 的机器上：
 #   bash python-3.11.6-installer.sh -p /opt/mypython -b
 # =============================================================================
 
-FROM ubuntu:22.04 AS builder
+FROM quay.io/pypa/manylinux2014_x86_64 AS builder
 
 ARG app_version=3.11.6
 ENV app_version=${app_version}
@@ -26,27 +33,34 @@ ENV app_version=${app_version}
 ARG BUILD_THREADS=8
 ENV BUILD_THREADS=${BUILD_THREADS}
 
-# 占位前缀：固定 255 字符（和 conda 一致），后面会被 sed 替换为真实路径
-# 形如 /opt/_python_placeholder_xxxxxxxx...   总长 255
+# 占位前缀：固定 255 字符（和 conda 一致），后面会被替换为真实路径
 ENV PLACEHOLDER_PREFIX=/opt/_python_relocatable_placeholder_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        build-essential pkg-config wget ca-certificates xz-utils zstd \
-        libbz2-dev libffi-dev libgdbm-dev libgdbm-compat-dev liblzma-dev \
-        libncurses5-dev libreadline-dev libsqlite3-dev libssl-dev \
-        uuid-dev zlib1g-dev tk-dev \
-    && rm -rf /var/lib/apt/lists/*
+# manylinux2014 已内置 devtoolset-10、autoconf、make、wget、各种 -devel
+# 这里补充几个 yum 包；openssl 1.1.1 镜像里已经在 /usr/local 编译好了
+RUN yum install -y \
+        bzip2-devel libffi-devel xz-devel ncurses-devel readline-devel \
+        sqlite-devel libuuid-devel zlib-devel gdbm-devel \
+        wget zstd which file findutils \
+    && yum clean all
+
+# 启用 devtoolset-10（gcc 10），后续 RUN 都用它
+SHELL ["/bin/bash", "-lc"]
+ENV BASH_ENV=/opt/rh/devtoolset-10/enable
+# manylinux 自带的较新 openssl 在 /usr/local，确保能被链接到
+ENV PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib64/pkgconfig
+ENV LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib
 
 # -------- 下载并解压源码 ----------------------------------------------------
 RUN mkdir -p /src && cd /src && \
     wget -q https://www.python.org/ftp/python/${app_version}/Python-${app_version}.tgz && \
     tar -xzf Python-${app_version}.tgz
 
-# -------- 编译：动态库 + RPATH=$ORIGIN/../lib ------------------------------
-# 校验占位前缀长度必须为 255
+# -------- 校验占位前缀长度 -------------------------------------------------
 RUN test "$(printf %s "${PLACEHOLDER_PREFIX}" | wc -c)" = "255" \
     && echo "PLACEHOLDER_PREFIX length OK (255)"
 
+# -------- 编译：动态库 + RPATH=$ORIGIN/../lib ------------------------------
 RUN cd /src/Python-${app_version} && \
     ./configure \
         --prefix=${PLACEHOLDER_PREFIX} \
@@ -58,7 +72,8 @@ RUN cd /src/Python-${app_version} && \
     && make install
 
 # -------- 把动态依赖库一起搬进 lib/，保证完全自包含 ------------------------
-# 拷贝 python 主程序及 _ssl/_hashlib 等扩展所依赖的非系统库
+# 注意：glibc 系列（libc/libdl/libm/libpthread/libnsl/libresolv/libutil/librt
+# 以及 ld-linux*）严禁打包——必须用目标机器自己的 glibc，否则 NSS/locale 全崩
 RUN set -eux; \
     mkdir -p ${PLACEHOLDER_PREFIX}/lib; \
     bins="${PLACEHOLDER_PREFIX}/bin/python3"; \
@@ -66,25 +81,30 @@ RUN set -eux; \
     for f in $bins; do \
         ldd "$f" 2>/dev/null | awk '/=>/ {print $3}' | grep -E '^/' || true; \
     done | sort -u | while read lib; do \
-        case "$lib" in \
-            /lib/*|/lib64/*|/usr/lib/x86_64-linux-gnu/libc.*|/usr/lib/x86_64-linux-gnu/libdl.*|\
-            /usr/lib/x86_64-linux-gnu/libm.*|/usr/lib/x86_64-linux-gnu/libpthread.*|\
-            /usr/lib/x86_64-linux-gnu/librt.*|/usr/lib/x86_64-linux-gnu/libutil.*|\
-            /usr/lib/x86_64-linux-gnu/libresolv.*|/usr/lib/x86_64-linux-gnu/libnsl.*) \
+        base=$(basename "$lib"); \
+        case "$base" in \
+            libc.so.*|libdl.so.*|libm.so.*|libpthread.so.*|librt.so.*|\
+            libutil.so.*|libresolv.so.*|libnsl.so.*|libcrypt.so.*|\
+            ld-linux*.so.*|libgcc_s.so.*|libstdc++.so.*) \
                 : ;; \
             *) \
                 cp -L "$lib" ${PLACEHOLDER_PREFIX}/lib/ || true ;; \
         esac; \
     done
 
-# -------- 写入一个 manifest，记录所有需要被前缀替换的文件 ------------------
-# 文本文件（脚本/配置）用 sed 替换；ELF/二进制文件需用等长替换工具
+# -------- 记录最低 glibc 要求（manylinux2014 通常 = 2.17） -----------------
+RUN min_glibc=$(objdump -T ${PLACEHOLDER_PREFIX}/bin/python3 \
+        ${PLACEHOLDER_PREFIX}/lib/*.so* 2>/dev/null \
+        | awk '/GLIBC_/ {gsub(/[()]/,"",$5); print $5}' \
+        | sed 's/GLIBC_//' | sort -uV | tail -n1) ; \
+    echo "$min_glibc" > ${PLACEHOLDER_PREFIX}/MIN_GLIBC.txt ; \
+    echo "Built against max glibc symbol = $min_glibc"
+
+# -------- 写入 manifest，记录需要前缀替换的文件 ----------------------------
 RUN set -eux; cd ${PLACEHOLDER_PREFIX}; \
     find . -type f \( -name '*.py' -o -name '*.cfg' -o -name '*.conf' \
         -o -name '*.txt' -o -name '*.pc' -o -name '*.sh' \) > /tmp/text-files.lst; \
-    # 所有可能含路径的二进制（python 主程序、.so、pyc 暂不处理由 python 自己重建）
     find . -type f \( -perm -u+x -o -name '*.so' -o -name '*.so.*' \) > /tmp/bin-files.lst; \
-    # 还需要扫描带 shebang 的脚本（bin/ 下大多是）
     find ./bin -type f >> /tmp/text-files.lst; \
     sort -u /tmp/text-files.lst -o /tmp/text-files.lst; \
     sort -u /tmp/bin-files.lst  -o /tmp/bin-files.lst
