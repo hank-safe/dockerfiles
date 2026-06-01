@@ -103,15 +103,59 @@ fi
 
 # -----------------------------------------------------------------------------
 # 3. 二进制文件：等长 + NUL 填充 替换（路径短时右侧补 \0）
-#    bash 命令替换会吞掉 \0，所以 NUL 填充必须在 perl 里直接构造
+#    bash 命令替换会吞掉 \0，所以 NUL 填充必须在外部解释器里直接构造。
+#    优先用 perl；其次用系统 python3；最后用刚解压的 $PREFIX/bin/python3
+#    （RPATH=$ORIGIN/../lib，无需前缀重写即可运行）
 # -----------------------------------------------------------------------------
 echo "[3/3] Rewriting prefix in binary files ..."
 
+# python3 等长替换脚本（与 perl 逻辑完全等价）
+# 写临时文件再 os.replace 原子替换，避免直接修改正在运行的可执行文件导致 ETXTBSY
+_PY_REWRITE='
+import os, sys, stat, tempfile
+old = os.environ["PLACEHOLDER_PREFIX"].encode()
+new = os.environ["NEW_PREFIX"].encode()
+pad = int(os.environ["PLACEHOLDER_LEN"]) - len(new)
+rep = new + b"\x00" * pad
+target = sys.argv[1]
+with open(target, "rb") as f:
+    d = f.read()
+if old not in d:
+    sys.exit(0)
+d = d.replace(old, rep)
+st = os.stat(target)
+dirfd = os.path.dirname(target) or "."
+fd, tmp = tempfile.mkstemp(dir=dirfd)
+try:
+    os.write(fd, d)
+    os.close(fd)
+    os.chmod(tmp, stat.S_IMODE(st.st_mode))
+    os.replace(tmp, target)
+except:
+    os.close(fd) if not fd == -1 else None
+    os.unlink(tmp)
+    raise
+'
+
+# 选择可用的解释器
+_BIN_REWRITER=""
 if command -v perl >/dev/null 2>&1; then
-    if [[ -f "$BIN_LST" ]]; then
-        while IFS= read -r rel; do
-            f="$PREFIX/${rel#./}"
-            [[ -f "$f" ]] || continue
+    _BIN_REWRITER="perl"
+elif command -v python3 >/dev/null 2>&1; then
+    _BIN_REWRITER="python3"
+elif [[ -x "$PREFIX/bin/python3" ]]; then
+    _BIN_REWRITER="$PREFIX/bin/python3"
+else
+    echo "ERROR: neither perl nor python3 found, binary prefix rewrite cannot proceed"
+    exit 1
+fi
+echo "    using $_BIN_REWRITER for binary rewrite"
+
+if [[ -f "$BIN_LST" ]]; then
+    while IFS= read -r rel; do
+        f="$PREFIX/${rel#./}"
+        [[ -f "$f" ]] || continue
+        if [[ "$_BIN_REWRITER" == "perl" ]]; then
             PLACEHOLDER_PREFIX="$PLACEHOLDER_PREFIX" \
             NEW_PREFIX="$PREFIX" \
             PLACEHOLDER_LEN="$PLACEHOLDER_LEN" \
@@ -122,11 +166,13 @@ if command -v perl >/dev/null 2>&1; then
                 my $rep = $new . ("\0" x $pad);
                 s/\Q$old\E/$rep/g;
             ' "$f" || true
-        done < "$BIN_LST"
-    fi
-else
-    echo "ERROR: perl not found, binary prefix rewrite cannot proceed"
-    exit 1
+        else
+            PLACEHOLDER_PREFIX="$PLACEHOLDER_PREFIX" \
+            NEW_PREFIX="$PREFIX" \
+            PLACEHOLDER_LEN="$PLACEHOLDER_LEN" \
+            "$_BIN_REWRITER" -c "$_PY_REWRITE" "$f" || true
+        fi
+    done < "$BIN_LST"
 fi
 
 # 清理 manifest 残留
