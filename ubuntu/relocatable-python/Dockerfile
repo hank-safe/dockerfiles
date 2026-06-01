@@ -52,7 +52,7 @@ SHELL ["/bin/bash", "-lc"]
 ENV BASH_ENV=/opt/rh/devtoolset-10/enable
 # manylinux 自带的较新 openssl 在 /usr/local，确保能被链接到
 ENV PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib64/pkgconfig
-ENV LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib
+ENV LD_LIBRARY_PATH=/usr/local/openssl/lib:/usr/local/lib64:/usr/local/lib
 
 # -------- 下载并解压源码 ----------------------------------------------------
 RUN mkdir -p /src && cd /src && \
@@ -73,20 +73,54 @@ RUN set -eux; \
     test "$actual" = "${PLACEHOLDER_LEN}"; \
     echo "PLACEHOLDER_PREFIX length OK (${actual}): $(cat /PLACEHOLDER_PREFIX)"
 
-# -------- 编译：动态库 + RPATH=$ORIGIN/../lib ------------------------------
+ARG openssl_version=1.1.1w
+ENV openssl_version=${openssl_version}
+
+# manylinux2014 只有 OpenSSL .so，没有头文件，无法编译 _ssl；需要自行从源码编译
+# install_sw 只装库和头文件，跳过文档，速度快
+RUN cd /src && \
+    wget -q https://www.openssl.org/source/openssl-${openssl_version}.tar.gz && \
+    tar -xzf openssl-${openssl_version}.tar.gz && \
+    cd openssl-${openssl_version} && \
+    ./config --prefix=/usr/local/openssl --openssldir=/usr/local/openssl \
+             shared zlib no-tests && \
+    make -j ${BUILD_THREADS} && \
+    make install_sw && \
+    echo "/usr/local/openssl" > /OPENSSL_DIR && \
+    echo "OpenSSL $(cat /OPENSSL_DIR) OK"
+
+# -------- 编译：动态库，先不设 RPATH（configure/make 会破坏 $ORIGIN 转义）-------
 RUN PLACEHOLDER_PREFIX=$(cat /PLACEHOLDER_PREFIX) && \
+    OPENSSL_DIR=$(cat /OPENSSL_DIR) && \
     cd /src/Python-${app_version} && \
     ./configure \
         --prefix=${PLACEHOLDER_PREFIX} \
         --enable-shared \
         --enable-optimizations \
         --with-ensurepip=install \
-        LDFLAGS="-Wl,-rpath,\$\$ORIGIN/../lib -Wl,--disable-new-dtags" \
+        --with-openssl=${OPENSSL_DIR} \
+        --with-openssl-rpath=${OPENSSL_DIR}/lib \
     && make -j ${BUILD_THREADS} \
     && make install
 
+# -------- 验证关键 C 扩展均已编译（此时 LD_LIBRARY_PATH 还在，可正常 import）---
+# 先检查 .so 文件是否存在，再验证能否 import（更早报错，信息更清晰）
+RUN PLACEHOLDER_PREFIX=$(cat /PLACEHOLDER_PREFIX) && \
+    py_ver=$(ls ${PLACEHOLDER_PREFIX}/lib/ | grep '^python3' | head -1) && \
+    dynload="${PLACEHOLDER_PREFIX}/lib/${py_ver}/lib-dynload" && \
+    echo "Checking lib-dynload: $dynload" && \
+    ls "$dynload"/_ssl*.so  || { echo "ERROR: _ssl.so not compiled. Check configure --with-openssl path"; exit 1; } && \
+    ls "$dynload"/_hashlib*.so || { echo "ERROR: _hashlib.so not compiled"; exit 1; } && \
+    LD_LIBRARY_PATH="${PLACEHOLDER_PREFIX}/lib:${LD_LIBRARY_PATH}" \
+    ${PLACEHOLDER_PREFIX}/bin/python3 -c \
+        'import _ssl, _hashlib, _sqlite3, zlib; print("C extensions OK")'
+
 # -------- 把动态依赖库一起搬进 lib/，保证完全自包含 ------------------------
-# 注意：glibc 系列（libc/libdl/libm/libpthread/libnsl/libresolv/libutil/librt
+# 注意：必须在 patchelf 之前运行！此时 _ssl.so 等扩展还保留编译期 RPATH，
+# ldd 能通过 LD_LIBRARY_PATH 找到 /usr/local/lib64/libssl.so.1.1 等依赖。
+# patchelf 之后 RPATH 变成 $ORIGIN/...，ldd 对 .so 文件解析 $ORIGIN 不可靠，
+# 会漏掉 libssl/libcrypto 等依赖。
+# glibc 系列（libc/libdl/libm/libpthread/libnsl/libresolv/libutil/librt
 # 以及 ld-linux*）严禁打包——必须用目标机器自己的 glibc，否则 NSS/locale 全崩
 RUN set -eux; \
     PLACEHOLDER_PREFIX=$(cat /PLACEHOLDER_PREFIX); \
@@ -94,9 +128,13 @@ RUN set -eux; \
     bins="${PLACEHOLDER_PREFIX}/bin/python3"; \
     bins="$bins $(find ${PLACEHOLDER_PREFIX}/lib -name '*.so*' 2>/dev/null)"; \
     for f in $bins; do \
+        LD_LIBRARY_PATH="${PLACEHOLDER_PREFIX}/lib:${LD_LIBRARY_PATH:-}" \
         ldd "$f" 2>/dev/null | awk '/=>/ {print $3}' | grep -E '^/' || true; \
     done | sort -u | while read lib; do \
         base=$(basename "$lib"); \
+        case "$lib" in \
+            ${PLACEHOLDER_PREFIX}/*) continue ;; \
+        esac; \
         case "$base" in \
             libc.so.*|libdl.so.*|libm.so.*|libpthread.so.*|librt.so.*|\
             libutil.so.*|libresolv.so.*|libnsl.so.*|libcrypt.so.*|\
@@ -106,6 +144,36 @@ RUN set -eux; \
                 cp -L "$lib" ${PLACEHOLDER_PREFIX}/lib/ || true ;; \
         esac; \
     done
+
+# -------- 用 patchelf 直接写入 RPATH，彻底绕过 configure/make 的 shell 展开 ----
+# 根据文件相对 PREFIX 的深度计算 ../，确保所有层级的 ELF 都能找到 lib/
+# 例：bin/python3 (depth=1) -> $ORIGIN/../lib
+#     lib/python3.11/lib-dynload/_ssl.so (depth=3) -> $ORIGIN/../../../lib
+RUN set -eux; \
+    PLACEHOLDER_PREFIX=$(cat /PLACEHOLDER_PREFIX); \
+    find ${PLACEHOLDER_PREFIX}/bin ${PLACEHOLDER_PREFIX}/lib \
+        -type f ! -type l | while read f; do \
+        file "$f" | grep -q ELF || continue; \
+        rel_dir=$(dirname "${f#${PLACEHOLDER_PREFIX}/}"); \
+        depth=$(echo "$rel_dir" | tr '/' '\n' | grep -c .); \
+        ups=$(printf '../%.0s' $(seq 1 "$depth")); \
+        rpath="\$ORIGIN/${ups}lib"; \
+        patchelf --set-rpath "$rpath" "$f" 2>/dev/null || true; \
+    done; \
+    echo "patchelf done"
+
+# -------- Sanity check：RPATH + import 验证（依赖已拷贝完，才能真正自包含测试）--
+RUN set -eux; \
+    PLACEHOLDER_PREFIX=$(cat /PLACEHOLDER_PREFIX); \
+    echo "=== patchelf --print-rpath python3 ==="; \
+    patchelf --print-rpath ${PLACEHOLDER_PREFIX}/bin/python3; \
+    patchelf --print-rpath ${PLACEHOLDER_PREFIX}/bin/python3 \
+        | grep -q 'ORIGIN/\.\./lib' \
+        || { echo "ERROR: RPATH not set correctly"; exit 1; }; \
+    echo "RPATH OK"; \
+    # 清空 LD_LIBRARY_PATH，强制只靠 RPATH 和 lib/ 下的 .so 运行
+    env -u LD_LIBRARY_PATH ${PLACEHOLDER_PREFIX}/bin/python3 \
+        -c 'import sys, ssl, sqlite3, zlib; print("sanity OK:", sys.version.split()[0])'
 
 # -------- 记录最低 glibc 要求（manylinux2014 通常 = 2.17） -----------------
 RUN PLACEHOLDER_PREFIX=$(cat /PLACEHOLDER_PREFIX) && \
@@ -137,6 +205,7 @@ RUN mkdir -p /packs && cd /opt && \
         ${PLACEHOLDER_DIR} /tmp/text-files.lst /tmp/bin-files.lst 2>/dev/null
 
 # -------- 拼接 installer-head.sh + payload 生成自解压 sh -------------------
+# 运行时通过 grep gzip 魔数 \x1f\x8b 定位 payload，无需构建时嵌入偏移
 COPY installer-head.sh /packs/installer-head.sh
 RUN set -eux; \
     PLACEHOLDER_PREFIX=$(cat /PLACEHOLDER_PREFIX); \

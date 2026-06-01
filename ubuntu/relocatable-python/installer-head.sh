@@ -63,17 +63,19 @@ if [[ $BATCH -eq 0 ]]; then
 fi
 
 # -----------------------------------------------------------------------------
-# 1. 找到 payload 起始字节偏移
+# 1. 找到 payload 起始位置（通过 gzip 魔数 1f 8b 定位）
+#    Shell 头部是纯 ASCII 文本，不含 \x1f\x8b，所以首次出现即为 payload 起始位置
+#    无需构建时嵌入任何偏移，适用于所有 Linux 环境
 # -----------------------------------------------------------------------------
-ARCHIVE_LINE=$(awk '/^__ARCHIVE_BELOW__$/ {print NR + 1; exit 0}' "$0")
-[[ -z "$ARCHIVE_LINE" ]] && { echo "ERROR: archive marker not found"; exit 1; }
+PAYLOAD_OFFSET=$(grep -boa -m 1 $'\x1f\x8b' "$0" 2>/dev/null | cut -d: -f1)
+[[ -n "$PAYLOAD_OFFSET" ]] || { echo "ERROR: cannot locate gzip payload in $0"; exit 1; }
 
 mkdir -p "$PREFIX"
 TMPDIR="$(mktemp -d)"
 trap 'rm -rf "$TMPDIR"' EXIT
 
 echo "[1/3] Extracting payload ..."
-tail -n +"$ARCHIVE_LINE" "$0" | tar -xzf - -C "$TMPDIR"
+tail -c +$((PAYLOAD_OFFSET + 1)) "$0" | tar -xzf - -C "$TMPDIR"
 
 # payload 解出来是 $TMPDIR/payload/...
 mv "$TMPDIR"/payload/* "$PREFIX"/
@@ -101,11 +103,9 @@ fi
 
 # -----------------------------------------------------------------------------
 # 3. 二进制文件：等长 + NUL 填充 替换（路径短时右侧补 \0）
-#    用 python 自带的临时方式做不到，这里用纯 bash + perl/sed -z
+#    bash 命令替换会吞掉 \0，所以 NUL 填充必须在 perl 里直接构造
 # -----------------------------------------------------------------------------
 echo "[3/3] Rewriting prefix in binary files ..."
-PAD_LEN=$((PLACEHOLDER_LEN - ${#PREFIX}))
-NEW_PADDED="$PREFIX$(printf '\0%.0s' $(seq 1 $PAD_LEN))"
 
 if command -v perl >/dev/null 2>&1; then
     if [[ -f "$BIN_LST" ]]; then
@@ -113,16 +113,20 @@ if command -v perl >/dev/null 2>&1; then
             f="$PREFIX/${rel#./}"
             [[ -f "$f" ]] || continue
             PLACEHOLDER_PREFIX="$PLACEHOLDER_PREFIX" \
-            NEW_PADDED="$NEW_PADDED" \
+            NEW_PREFIX="$PREFIX" \
+            PLACEHOLDER_LEN="$PLACEHOLDER_LEN" \
             perl -0777 -pi -e '
                 my $old = $ENV{PLACEHOLDER_PREFIX};
-                my $new = $ENV{NEW_PADDED};
-                s/\Q$old\E/$new/g;
+                my $new = $ENV{NEW_PREFIX};
+                my $pad = $ENV{PLACEHOLDER_LEN} - length($new);
+                my $rep = $new . ("\0" x $pad);
+                s/\Q$old\E/$rep/g;
             ' "$f" || true
         done < "$BIN_LST"
     fi
 else
-    echo "WARN: perl not found, binary prefix rewrite skipped (may break C extensions paths)"
+    echo "ERROR: perl not found, binary prefix rewrite cannot proceed"
+    exit 1
 fi
 
 # 清理 manifest 残留
