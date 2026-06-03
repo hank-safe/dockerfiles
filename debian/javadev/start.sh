@@ -9,5 +9,9 @@ printenv | grep -v '^_=' | while IFS='=' read -r key value; do
     printf '%s="%s"\n' "$key" "$value"
 done | sudo tee /etc/environment > /dev/null
 
+# 修复 sshd 启动报错: Missing privilege separation directory: /run/sshd
+sudo mkdir -p /run/sshd
+sudo chmod 755 /run/sshd
+
 # 使用 sudo 以 root 身份启动 sshd
 sudo /usr/sbin/sshd -D
