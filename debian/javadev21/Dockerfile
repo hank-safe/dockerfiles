@@ -93,6 +93,23 @@ RUN wget --progress=dot:giga -O maven.tar.gz "https://archive.apache.org/dist/ma
 # 配置 Maven 本地仓库目录
 RUN mkdir -p /root/.m2/repository
 
+# 安装 Node.js
+RUN node_version=24.15.0 && apt-get update && apt-get install -y xz-utils && \
+    case "$(arch)" in \
+        x86_64) arch_m="x64" ;; \
+        aarch64) arch_m="arm64" ;; \
+        *) echo >&2 "error: unsupported version: '$app_version'"; exit 1 ;; \
+    esac && \
+    wget https://nodejs.org/dist/v${node_version}/node-v${node_version}-linux-${arch_m}.tar.xz && \
+    tar xf node-v${node_version}-linux-${arch_m}.tar.xz -C /usr/local/ && \
+    rm -f node-v${node_version}-linux-${arch_m}.tar.xz && \
+    ln -sf /usr/local/node-v${node_version}-linux-${arch_m} /usr/local/node
+
+ENV PATH=$PATH:/usr/local/node/bin
+
+# 安装 claude-code
+RUN npm install -g @anthropic-ai/claude-code@latest
+
 # 创建普通用户
 RUN addgroup --gid 1008 normaluser && \
     adduser --system --disabled-password --home /home/normaluser -u 1008 --ingroup normaluser normaluser --shell /bin/bash && \
@@ -113,10 +130,10 @@ RUN echo 'normaluser:123456' | chpasswd && \
 
 RUN sed -i '43asession        required      pam_env.so envfile=/etc/environment' /etc/pam.d/sshd
 
-# 配置 Java/Maven 环境变量，SSH 登录时也可用
+# 配置 Java/Maven/Node 环境变量，SSH 登录时也可用
 RUN echo "export JAVA_HOME=${JAVA_HOME}" > /etc/profile.d/java.sh && \
     echo "export MAVEN_HOME=${MAVEN_HOME}" >> /etc/profile.d/java.sh && \
-    echo 'export PATH=${JAVA_HOME}/bin:${MAVEN_HOME}/bin:$PATH' >> /etc/profile.d/java.sh && \
+    echo 'export PATH=${JAVA_HOME}/bin:${MAVEN_HOME}/bin:/usr/local/node/bin:$PATH' >> /etc/profile.d/java.sh && \
     echo "alias ls='ls --color=auto'" >> /etc/profile.d/alias.sh && \
     echo "LANG=en_US.UTF-8" >> /etc/profile.d/locale.sh && \
     echo "LC_ALL=en_US.UTF-8" >> /etc/profile.d/locale.sh
