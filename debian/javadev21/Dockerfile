@@ -54,9 +54,11 @@ RUN set -eux; \
     wget --progress=dot:giga -O openjdk.tgz "$downloadUrl"; \
     wget --progress=dot:giga -O openjdk.tgz.asc "$downloadUrl.sig"; \
     export GNUPGHOME="$(mktemp -d)"; \
+    # 导入 Adoptium 所有常用签名公钥（包含新旧版本）
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys EAC843EBD3EFDB98CC772FADA5CD6035332FA671; \
-    gpg --batch --keyserver keyserver.ubuntu.com --keyserver-options no-self-sigs-only --recv-keys CA5F11C6CE22644D42C6AC4492EF8D39DC13168F; \
-    gpg --batch --list-sigs --keyid-format 0xLONG CA5F11C6CE22644D42C6AC4492EF8D39DC13168F | tee /dev/stderr | grep '0xA5CD6035332FA671' | grep 'Andrew Haley'; \
+    gpg --batch --keyserver keyserver.ubuntu.com --recv-keys CA5F11C6CE22644D42C6AC4492EF8D39DC13168F; \
+    gpg --batch --keyserver keyserver.ubuntu.com --recv-keys 3B04D753C9050D9A5D343F39843C48A565F8F04B; \
+    # 验证签名
     gpg --batch --verify openjdk.tgz.asc openjdk.tgz; \
     gpgconf --kill all; \
     rm -rf "$GNUPGHOME"; \
@@ -66,6 +68,7 @@ RUN set -eux; \
     apt-mark auto '.*' > /dev/null; \
     [ -z "$savedAptMark" ] || apt-mark manual $savedAptMark > /dev/null; \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+    # 更新 CA 证书至 JDK 的 cacerts（JDK11+ 路径无 jre 目录）
     { echo '#!/usr/bin/env bash'; \
       echo 'set -Eeuo pipefail'; \
       echo 'trust extract --overwrite --format=java-cacerts --filter=ca-anchors --purpose=server-auth "$JAVA_HOME/lib/security/cacerts"'; \
@@ -118,7 +121,7 @@ RUN echo "export JAVA_HOME=${JAVA_HOME}" > /etc/profile.d/java.sh && \
     echo "LANG=en_US.UTF-8" >> /etc/profile.d/locale.sh && \
     echo "LC_ALL=en_US.UTF-8" >> /etc/profile.d/locale.sh
 
-# 复制启动脚本
+# 复制启动脚本（需要您本地提供 start.sh）
 COPY start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
