@@ -1,12 +1,12 @@
 # JDK21 + Maven 开发环境
 # 基于 debian:12.10-slim，模仿 debian/godev 风格
-ARG app_version=21.0.6+7          # JDK 版本，可覆盖
+ARG app_version=21.0.6+7
 ARG maven_version=3.9.9
 
 FROM debian:12.10-slim
 
-LABEL maintainer "Hank"
-LABEL github "https://github.com/agocan"
+LABEL maintainer="Hank"
+LABEL github="https://github.com/agocan"
 
 ARG TARGETARCH
 ARG https_proxy
@@ -43,8 +43,8 @@ RUN set -eux; \
         *) echo >&2 "error: unsupported architecture: '$arch'"; exit 1; ;; \
     esac; \
     # 处理版本号中的 + 号：URL 路径中用 %2B，文件名中用 _
-    urlVersion="${app_version//+/%2B}"; \
-    fileVersion="${app_version//+/_}"; \
+    urlVersion="$(echo "$app_version" | sed 's/+/%2B/g')"; \
+    fileVersion="$(echo "$app_version" | tr '+' '_')"; \
     downloadUrl="https://github.com/adoptium/temurin21-binaries/releases/download/jdk-${urlVersion}/OpenJDK21U-jdk_${downloadArch}_linux_hotspot_${fileVersion}.tar.gz"; \
     savedAptMark="$(apt-mark showmanual)"; \
     apt-get update; \
@@ -54,7 +54,6 @@ RUN set -eux; \
     wget --progress=dot:giga -O openjdk.tgz "$downloadUrl"; \
     wget --progress=dot:giga -O openjdk.tgz.asc "$downloadUrl.sig"; \
     export GNUPGHOME="$(mktemp -d)"; \
-    # Adoptium 签名密钥（适用于所有版本）
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys EAC843EBD3EFDB98CC772FADA5CD6035332FA671; \
     gpg --batch --keyserver keyserver.ubuntu.com --keyserver-options no-self-sigs-only --recv-keys CA5F11C6CE22644D42C6AC4492EF8D39DC13168F; \
     gpg --batch --list-sigs --keyid-format 0xLONG CA5F11C6CE22644D42C6AC4492EF8D39DC13168F | tee /dev/stderr | grep '0xA5CD6035332FA671' | grep 'Andrew Haley'; \
@@ -67,7 +66,6 @@ RUN set -eux; \
     apt-mark auto '.*' > /dev/null; \
     [ -z "$savedAptMark" ] || apt-mark manual $savedAptMark > /dev/null; \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-    # 更新 CA 证书至 JDK 的 cacerts（JDK11+ 路径无 jre 目录）
     { echo '#!/usr/bin/env bash'; \
       echo 'set -Eeuo pipefail'; \
       echo 'trust extract --overwrite --format=java-cacerts --filter=ca-anchors --purpose=server-auth "$JAVA_HOME/lib/security/cacerts"'; \
