@@ -103,6 +103,7 @@ ENV PATH=$PATH:/usr/local/node/bin
 
 # 安装 claude-code
 RUN npm install -g @anthropic-ai/claude-code@latest
+RUN npm install -g @openai/codex
 
 # 创建普通用户
 RUN addgroup --gid 1008 normaluser && \
