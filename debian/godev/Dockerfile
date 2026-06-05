@@ -32,13 +32,7 @@ RUN echo 'normaluser:123456' |chpasswd && \
 RUN sed -i '43asession        required      pam_env.so envfile=/etc/environment' /etc/pam.d/sshd
 
 # 配置 Go 环境变量，确保 SSH 登录时也可用
-RUN echo 'export PATH=/go/bin:/usr/local/go/bin:$PATH' > /etc/profile.d/golang.sh && \
-    echo 'export GOPATH=/go' >> /etc/profile.d/golang.sh && \
-    echo 'export GOTOOLCHAIN=local' >> /etc/profile.d/golang.sh && \
-    echo 'export GOLANG_VERSION=${GOLANG_VERSION}' >> /etc/profile.d/golang.sh && \
-    echo "alias ls='ls --color=auto'" >> /etc/profile.d/alias.sh && \
-    echo "LANG=en_US.UTF-8" >> /etc/profile.d/locale.sh && \
-    echo "LC_ALL=en_US.UTF-8" >> /etc/profile.d/locale.sh
+COPY profile.d/ /etc/profile.d/
 
 # 复制启动脚本，动态设置 /run/sshd 权限
 COPY start.sh /usr/local/bin/start.sh

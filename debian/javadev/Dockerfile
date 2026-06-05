@@ -126,12 +126,7 @@ RUN echo 'normaluser:123456' | chpasswd && \
 RUN sed -i '43asession        required      pam_env.so envfile=/etc/environment' /etc/pam.d/sshd
 
 # 配置 Java/Maven/Node 环境变量，SSH 登录时也可用
-RUN echo "export JAVA_HOME=${JAVA_HOME}" > /etc/profile.d/java.sh && \
-    echo "export MAVEN_HOME=${MAVEN_HOME}" >> /etc/profile.d/java.sh && \
-    echo 'export PATH=${JAVA_HOME}/bin:${MAVEN_HOME}/bin:/usr/local/node/bin:$PATH' >> /etc/profile.d/java.sh && \
-    echo "alias ls='ls --color=auto'" >> /etc/profile.d/alias.sh && \
-    echo "LANG=en_US.UTF-8" >> /etc/profile.d/locale.sh && \
-    echo "LC_ALL=en_US.UTF-8" >> /etc/profile.d/locale.sh
+COPY profile.d/ /etc/profile.d/
 
 # 复制启动脚本
 COPY start.sh /usr/local/bin/start.sh
