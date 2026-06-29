@@ -220,7 +220,8 @@ RUN set -eux; \
 # 最终镜像：仅保留安装包，方便 docker cp 出来
 # =============================================================================
 FROM ubuntu:22.04
+ARG TARGETARCH
 
-COPY --from=builder /packs/python-*-installer.sh /packs/
-WORKDIR /packs
-CMD ["bash", "-c", "ls -lh /packs && echo 'cp /packs/*.sh to your host'"]
+WORKDIR /packs/${TARGETARCH}
+COPY --from=builder /packs /packs/${TARGETARCH}
+
