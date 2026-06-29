@@ -1,0 +1,187 @@
+name: Build Static All
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_tag:
+        description: "image tag"
+        required: true
+        default: "1.0.0"
+      build_arch:
+        description: "target platforms"
+        required: true
+        default: "linux/amd64,linux/arm64"
+      repo:
+        description: "image repository"
+        required: true
+        default: "crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997"
+      static_bind_version:
+        description: "static-bind version"
+        required: true
+        default: "9.16.50"
+      static_bmon_version:
+        description: "static-bmon version"
+        required: true
+        default: "4.0"
+      static_chrony_version:
+        description: "static-chrony version"
+        required: true
+        default: "4.8"
+      static_curl_version:
+        description: "static-curl version"
+        required: true
+        default: "8.21.0"
+      static_dos2unix_version:
+        description: "static-dos2unix version"
+        required: true
+        default: "7.5.6"
+      static_fio_version:
+        description: "static-fio version"
+        required: true
+        default: "3.36"
+      static_gawk_version:
+        description: "static-gawk version"
+        required: true
+        default: "5.4.0"
+      static_htop_version:
+        description: "static-htop version"
+        required: true
+        default: "3.5.1"
+      static_iotop_version:
+        description: "static-iotop version"
+        required: true
+        default: "1.31"
+      static_jq_version:
+        description: "static-jq version"
+        required: true
+        default: "1.8.2"
+      static_keepalived_version:
+        description: "static-keepalived version"
+        required: true
+        default: "2.4.1"
+      static_lrzsz_version:
+        description: "static-lrzsz version"
+        required: true
+        default: "0.12.20"
+      static_net_tools_version:
+        description: "static-net-tools version"
+        required: true
+        default: "2.10"
+      static_netcat_version:
+        description: "static-netcat version"
+        required: true
+        default: "0.7.1"
+      static_nmap_version:
+        description: "static-nmap version"
+        required: true
+        default: "7.99"
+      static_rsync_version:
+        description: "static-rsync version"
+        required: true
+        default: "3.4.4"
+      static_smartmontools_version:
+        description: "static-smartmontools version"
+        required: true
+        default: "7.5"
+      static_tar_version:
+        description: "static-tar version"
+        required: true
+        default: "1.35"
+      static_tcpdump_version:
+        description: "static-tcpdump version"
+        required: true
+        default: "4.99.6"
+      static_vim_version:
+        description: "static-vim version"
+        required: true
+        default: "9.1.1901"
+      static_wget_version:
+        description: "static-wget version"
+        required: true
+        default: "1.25.0"
+      relocatable_python_version:
+        description: "relocatable-python version"
+        required: true
+        default: "3.13.13"
+
+env:
+  BUILD_DIR: alpine/static-all
+  BUILD_NAME: static-all
+  BUILD_TAG: ${{ github.event.inputs.build_tag }}
+  BUILD_ARCH: ${{ github.event.inputs.build_arch }}
+  REPO: ${{ github.event.inputs.repo }}
+  STATIC_BIND_VERSION: ${{ github.event.inputs.static_bind_version }}
+  STATIC_BMON_VERSION: ${{ github.event.inputs.static_bmon_version }}
+  STATIC_CHRONY_VERSION: ${{ github.event.inputs.static_chrony_version }}
+  STATIC_CURL_VERSION: ${{ github.event.inputs.static_curl_version }}
+  STATIC_DOS2UNIX_VERSION: ${{ github.event.inputs.static_dos2unix_version }}
+  STATIC_FIO_VERSION: ${{ github.event.inputs.static_fio_version }}
+  STATIC_GAWK_VERSION: ${{ github.event.inputs.static_gawk_version }}
+  STATIC_HTOP_VERSION: ${{ github.event.inputs.static_htop_version }}
+  STATIC_IOTOP_VERSION: ${{ github.event.inputs.static_iotop_version }}
+  STATIC_JQ_VERSION: ${{ github.event.inputs.static_jq_version }}
+  STATIC_KEEPALIVED_VERSION: ${{ github.event.inputs.static_keepalived_version }}
+  STATIC_LRZSZ_VERSION: ${{ github.event.inputs.static_lrzsz_version }}
+  STATIC_NET_TOOLS_VERSION: ${{ github.event.inputs.static_net_tools_version }}
+  STATIC_NETCAT_VERSION: ${{ github.event.inputs.static_netcat_version }}
+  STATIC_NMAP_VERSION: ${{ github.event.inputs.static_nmap_version }}
+  STATIC_RSYNC_VERSION: ${{ github.event.inputs.static_rsync_version }}
+  STATIC_SMARTMONTOOLS_VERSION: ${{ github.event.inputs.static_smartmontools_version }}
+  STATIC_TAR_VERSION: ${{ github.event.inputs.static_tar_version }}
+  STATIC_TCPDUMP_VERSION: ${{ github.event.inputs.static_tcpdump_version }}
+  STATIC_VIM_VERSION: ${{ github.event.inputs.static_vim_version }}
+  STATIC_WGET_VERSION: ${{ github.event.inputs.static_wget_version }}
+  RELOCATABLE_PYTHON_VERSION: ${{ github.event.inputs.relocatable_python_version }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        registry: crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com
+        username: ${{ secrets.ALIYUN_DOCKER_USERNAME }}
+        password: ${{ secrets.ALIYUN_DOCKER_PASSWORD }}
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v3
+      with:
+        context: ${{ env.BUILD_DIR }}
+        file: ${{ env.BUILD_DIR }}/Dockerfile
+        push: true
+        platforms: ${{ env.BUILD_ARCH }}
+        tags: ${{ env.REPO }}/${{ env.BUILD_NAME }}:${{ env.BUILD_TAG }}
+        build-args: |
+          REPO=${{ env.REPO }}
+          STATIC_BIND_VERSION=${{ env.STATIC_BIND_VERSION }}
+          STATIC_BMON_VERSION=${{ env.STATIC_BMON_VERSION }}
+          STATIC_CHRONY_VERSION=${{ env.STATIC_CHRONY_VERSION }}
+          STATIC_CURL_VERSION=${{ env.STATIC_CURL_VERSION }}
+          STATIC_DOS2UNIX_VERSION=${{ env.STATIC_DOS2UNIX_VERSION }}
+          STATIC_FIO_VERSION=${{ env.STATIC_FIO_VERSION }}
+          STATIC_GAWK_VERSION=${{ env.STATIC_GAWK_VERSION }}
+          STATIC_HTOP_VERSION=${{ env.STATIC_HTOP_VERSION }}
+          STATIC_IOTOP_VERSION=${{ env.STATIC_IOTOP_VERSION }}
+          STATIC_JQ_VERSION=${{ env.STATIC_JQ_VERSION }}
+          STATIC_KEEPALIVED_VERSION=${{ env.STATIC_KEEPALIVED_VERSION }}
+          STATIC_LRZSZ_VERSION=${{ env.STATIC_LRZSZ_VERSION }}
+          STATIC_NET_TOOLS_VERSION=${{ env.STATIC_NET_TOOLS_VERSION }}
+          STATIC_NETCAT_VERSION=${{ env.STATIC_NETCAT_VERSION }}
+          STATIC_NMAP_VERSION=${{ env.STATIC_NMAP_VERSION }}
+          STATIC_RSYNC_VERSION=${{ env.STATIC_RSYNC_VERSION }}
+          STATIC_SMARTMONTOOLS_VERSION=${{ env.STATIC_SMARTMONTOOLS_VERSION }}
+          STATIC_TAR_VERSION=${{ env.STATIC_TAR_VERSION }}
+          STATIC_TCPDUMP_VERSION=${{ env.STATIC_TCPDUMP_VERSION }}
+          STATIC_VIM_VERSION=${{ env.STATIC_VIM_VERSION }}
+          STATIC_WGET_VERSION=${{ env.STATIC_WGET_VERSION }}
+          RELOCATABLE_PYTHON_VERSION=${{ env.RELOCATABLE_PYTHON_VERSION }}

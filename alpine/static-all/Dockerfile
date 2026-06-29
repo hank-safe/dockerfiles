@@ -1,25 +1,49 @@
-FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-bind:9.16.50 AS binary-bind
-FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-bmon:4.0 AS binary-bmon
-FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-chrony:4.8 AS binary-chrony
-FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-curl:8.21.0 AS binary-curl
-FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-dos2unix:7.5.6 AS binary-dos2unix
-FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-fio:3.36 AS binary-fio
-FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-gawk:5.4.0 AS binary-gawk
-FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-htop:3.5.1 AS binary-htop
-FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-iotop:1.31 AS binary-iotop
-FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-jq:1.8.2 AS binary-jq
-FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-keepalived:2.4.1 AS binary-keepalived
-FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-lrzsz:0.12.20 AS binary-lrzsz
-FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-net-tools:2.10 AS binary-net-tools
-FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-netcat:0.7.1 AS binary-netcat
-FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-nmap:7.99 AS binary-nmap
-FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-rsync:3.4.4 AS binary-rsync
-FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-smartmontools:7.5 AS binary-smartmontools
-FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-tar:1.35 AS binary-tar
-FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-tcpdump:4.99.6 AS binary-tcpdump
-FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-vim:9.1.1901 AS binary-vim
-FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-wget:1.25.0 AS binary-wget
-FROM crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/relocatable-python:3.13.13 AS binary-python
+ARG REPO=crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997
+ARG STATIC_BIND_VERSION=9.16.50
+ARG STATIC_BMON_VERSION=4.0
+ARG STATIC_CHRONY_VERSION=4.8
+ARG STATIC_CURL_VERSION=8.21.0
+ARG STATIC_DOS2UNIX_VERSION=7.5.6
+ARG STATIC_FIO_VERSION=3.36
+ARG STATIC_GAWK_VERSION=5.4.0
+ARG STATIC_HTOP_VERSION=3.5.1
+ARG STATIC_IOTOP_VERSION=1.31
+ARG STATIC_JQ_VERSION=1.8.2
+ARG STATIC_KEEPALIVED_VERSION=2.4.1
+ARG STATIC_LRZSZ_VERSION=0.12.20
+ARG STATIC_NET_TOOLS_VERSION=2.10
+ARG STATIC_NETCAT_VERSION=0.7.1
+ARG STATIC_NMAP_VERSION=7.99
+ARG STATIC_RSYNC_VERSION=3.4.4
+ARG STATIC_SMARTMONTOOLS_VERSION=7.5
+ARG STATIC_TAR_VERSION=1.35
+ARG STATIC_TCPDUMP_VERSION=4.99.6
+ARG STATIC_VIM_VERSION=9.1.1901
+ARG STATIC_WGET_VERSION=1.25.0
+ARG RELOCATABLE_PYTHON_VERSION=3.13.13
+
+FROM ${REPO}/static-bind:${STATIC_BIND_VERSION} AS binary-bind
+FROM ${REPO}/static-bmon:${STATIC_BMON_VERSION} AS binary-bmon
+FROM ${REPO}/static-chrony:${STATIC_CHRONY_VERSION} AS binary-chrony
+FROM ${REPO}/static-curl:${STATIC_CURL_VERSION} AS binary-curl
+FROM ${REPO}/static-dos2unix:${STATIC_DOS2UNIX_VERSION} AS binary-dos2unix
+FROM ${REPO}/static-fio:${STATIC_FIO_VERSION} AS binary-fio
+FROM ${REPO}/static-gawk:${STATIC_GAWK_VERSION} AS binary-gawk
+FROM ${REPO}/static-htop:${STATIC_HTOP_VERSION} AS binary-htop
+FROM ${REPO}/static-iotop:${STATIC_IOTOP_VERSION} AS binary-iotop
+FROM ${REPO}/static-jq:${STATIC_JQ_VERSION} AS binary-jq
+FROM ${REPO}/static-keepalived:${STATIC_KEEPALIVED_VERSION} AS binary-keepalived
+FROM ${REPO}/static-lrzsz:${STATIC_LRZSZ_VERSION} AS binary-lrzsz
+FROM ${REPO}/static-net-tools:${STATIC_NET_TOOLS_VERSION} AS binary-net-tools
+FROM ${REPO}/static-netcat:${STATIC_NETCAT_VERSION} AS binary-netcat
+FROM ${REPO}/static-nmap:${STATIC_NMAP_VERSION} AS binary-nmap
+FROM ${REPO}/static-rsync:${STATIC_RSYNC_VERSION} AS binary-rsync
+FROM ${REPO}/static-smartmontools:${STATIC_SMARTMONTOOLS_VERSION} AS binary-smartmontools
+FROM ${REPO}/static-tar:${STATIC_TAR_VERSION} AS binary-tar
+FROM ${REPO}/static-tcpdump:${STATIC_TCPDUMP_VERSION} AS binary-tcpdump
+FROM ${REPO}/static-vim:${STATIC_VIM_VERSION} AS binary-vim
+FROM ${REPO}/static-wget:${STATIC_WGET_VERSION} AS binary-wget
+FROM ${REPO}/relocatable-python:${RELOCATABLE_PYTHON_VERSION} AS binary-python
 
 FROM alpine AS aggregator
 
