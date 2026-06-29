@@ -3,6 +3,8 @@ FROM alpine:3.20.4 AS builder
 ARG app_version=0.12.20
 
 RUN apk add build-base gcc musl-dev 
+# 加在下面就可以？ 也不知道是为什么
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
 WORKDIR /build
 

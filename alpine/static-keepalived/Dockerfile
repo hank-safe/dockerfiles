@@ -5,6 +5,9 @@ FROM alpine AS builder
 ARG app_version=2.2.8
 ARG PCRE_VERSION=8.45
 
+# pcre2-static 后面的版本才可以下载，3.20.4 需要删了它，直接新版编译即可
+# 使用新版的alpine，并且增加pcre2-static，在github可以编译成功
+
 RUN apk --no-cache add \
         binutils \
         file \
