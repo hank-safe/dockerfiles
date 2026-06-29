@@ -1,4 +1,4 @@
-FROM alpine AS builder
+FROM alpine:3.20.4 AS builder
 
 ARG app_version=0.12.20
 
@@ -9,7 +9,7 @@ WORKDIR /build
 RUN wget -O lrzsz.tar.gz  https://www.ohse.de/uwe/releases/lrzsz-${app_version}.tar.gz && \
     tar xf lrzsz.tar.gz && \
     cd lrzsz-${app_version} && \
-    CFLAGS=-static  ./configure --prefix=/packs/lrzsz --disable-nls LDFLAGS="-static" && \
+    CFLAGS=-static LDFLAGS="-static" ./configure --prefix=/packs/lrzsz --disable-nls  && \
     make -j2 && \
     make install && \
     strip /packs/lrzsz/bin/lrz && \

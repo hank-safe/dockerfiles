@@ -21,6 +21,7 @@ RUN apk --no-cache add \
         libnl3 \
         libnl3-dev \
         libnl3-static \
+        pcre2-static \
         make \
         musl-dev \
         net-snmp-dev \

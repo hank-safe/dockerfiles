@@ -1,4 +1,4 @@
-FROM alpine AS builder
+FROM alpine:3.20.4 AS builder
 
 ARG app_version=7.95
 
@@ -29,7 +29,6 @@ ARG TARGETARCH
 
 WORKDIR /packs/${TARGETARCH}
 COPY --from=builder /packs /packs/${TARGETARCH}
-
 
 WORKDIR /packs
 

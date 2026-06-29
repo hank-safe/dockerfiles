@@ -32,27 +32,28 @@ docker buildx build --build-arg app_version=${app_version} --platform ${platform
 
 |name|镜像名称|路径|架构|
 |---|---|---|---|
+|bind|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-bind:9.16.50|[alpine/static-bind](alpine/static-bind)|linux/amd64,linux/arm64|
 |bmon|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-bmon:4.0|[alpine/static-bmon](alpine/static-bmon)|linux/amd64,linux/arm64|
-|chrony|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-chrony:4.6|[alpine/static-chrony](alpine/static-chrony)|linux/amd64,linux/arm64|
-|curl|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-curl:8.11.0|[alpine/static-curl](alpine/static-curl)|linux/amd64,linux/arm64|
+|chrony|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-chrony:4.8|[alpine/static-chrony](alpine/static-chrony)|linux/amd64,linux/arm64|
+|curl|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-curl:8.21.0|[alpine/static-curl](alpine/static-curl)|linux/amd64,linux/arm64|
+|dos2unix|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-dos2unix:7.5.6|[alpine/static-dos2unix](alpine/static-dos2unix)|linux/amd64,linux/arm64|
 |fio|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-fio:3.36|[alpine/static-fio](alpine/static-fio)|linux/amd64,linux/arm64|
-|gawk|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-gawk:5.3.2|[alpine/static-gawk](alpine/static-gawk)|linux/amd64,linux/arm64|
-|htop|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-htop:3.4.1|[alpine/static-htop](alpine/static-htop)|linux/amd64,linux/arm64|
-|iotop|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-iotop:1.29|[alpine/static-iotop](alpine/static-iotop)|linux/amd64,linux/arm64|
-|jq|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-jq:1.8.1|[alpine/static-jq](alpine/static-jq)|linux/amd64,linux/arm64|
+|gawk|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-gawk:5.4.0|[alpine/static-gawk](alpine/static-gawk)|linux/amd64,linux/arm64|
+|htop|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-htop:3.5.1|[alpine/static-htop](alpine/static-htop)|linux/amd64,linux/arm64|
+|iotop|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-iotop:1.31|[alpine/static-iotop](alpine/static-iotop)|linux/amd64,linux/arm64|
+|jq|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-jq:1.8.2|[alpine/static-jq](alpine/static-jq)|linux/amd64,linux/arm64|
 |keepalived|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-keepalived:2.2.8|[alpine/static-keepalived](alpine/static-keepalived)|linux/amd64,linux/arm64|
 |lrzsz|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-lrzsz:0.12.20|[alpine/static-lrzsz](alpine/static-lrzsz)|linux/amd64,linux/arm64|
 |net-tools|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-net-tools:2.10|[alpine/static-net-tools](alpine/static-net-tools)|linux/amd64,linux/arm64|
 |netcat|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-netcat:0.7.1|[alpine/static-netcat](alpine/static-netcat)|linux/amd64,linux/arm64|
-|nmap|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-nmap:7.95|[alpine/static-nmap](alpine/static-nmap)|linux/amd64,linux/arm64|
-|rsync|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-rsync:3.4.1|[alpine/static-rsync](alpine/static-rsync)|linux/amd64,linux/arm64|
+|nmap|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-nmap:7.99|[alpine/static-nmap](alpine/static-nmap)|linux/amd64,linux/arm64|
+|rsync|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-rsync:3.4.4|[alpine/static-rsync](alpine/static-rsync)|linux/amd64,linux/arm64|
+|smartmontools|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-smartmontools:7.5|[alpine/static-smartmontools](alpine/static-smartmontools)|linux/amd64,linux/arm64|
 |tar|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-tar:1.35|[alpine/static-tar](alpine/static-tar)|linux/amd64,linux/arm64|
-|tcpdump|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-tcpdump:4.99.4|[alpine/static-tcpdump](alpine/static-tcpdump)|linux/amd64,linux/arm64|
+|tcpdump|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-tcpdump:4.99.6|[alpine/static-tcpdump](alpine/static-tcpdump)|linux/amd64,linux/arm64|
 |vim|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-vim:9.1.1901|[alpine/static-vim](alpine/static-vim)|linux/amd64,linux/arm64|
-|wget|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-wget:1.24.5|[alpine/static-wget](alpine/static-wget)|linux/amd64,linux/arm64|
-|dos2unix|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-dos2unix:7.5.4|[alpine/static-dos2unix](alpine/static-dos2unix)|linux/amd64,linux/arm64|
-|bind|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-bind:9.16.50|[alpine/static-bind](alpine/static-bind)|linux/amd64,linux/arm64|
-|smartmontools|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-smartmontools:7.4|[alpine/static-smartmontools](alpine/static-smartmontools)|linux/amd64,linux/arm64|
+|wget|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-wget:1.25.0|[alpine/static-wget](alpine/static-wget)|linux/amd64,linux/arm64|
+
 
 ### rockylinux
 |name|镜像名称|路径|架构|

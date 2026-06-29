@@ -1,5 +1,5 @@
 FROM alpine AS builder
-
+# 3.36是验证可以编译的，4.2验证失败
 ARG app_version=3.36
 
 RUN apk add build-base gcc musl-dev && \
@@ -11,7 +11,7 @@ RUN wget -O fio.tar.gz  https://github.com/axboe/fio/archive/refs/tags/fio-${app
     tar xf fio.tar.gz && \
     cd fio-fio-${app_version} && \
     ./configure --prefix=/packs/fio --build-static && \
-    make -j && \
+    make && \
     make install && \
     strip /packs/fio/bin/fio && \
     chown -R $(id -u):$(id -g) /packs/fio
