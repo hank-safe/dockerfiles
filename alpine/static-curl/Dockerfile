@@ -24,8 +24,10 @@ RUN wget https://curl.haxx.se/download/curl-${app_version}.tar.gz && \
 WORKDIR /packs
 
 FROM alpine
+ARG TARGETARCH
 
-COPY --from=builder /packs /packs
+WORKDIR /packs/${TARGETARCH}
+COPY --from=builder /packs /packs/${TARGETARCH}
 
 WORKDIR /packs
 

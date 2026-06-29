@@ -1,4 +1,4 @@
-FROM ccr.ccs.tencentyun.com/hank997/alpine:3.20.3 AS builder
+FROM alpine AS builder
 
 ARG app_version=0.12.20
 
@@ -18,9 +18,12 @@ RUN wget -O lrzsz.tar.gz  https://www.ohse.de/uwe/releases/lrzsz-${app_version}.
 
 WORKDIR /packs
 
-FROM ccr.ccs.tencentyun.com/hank997/alpine:3.20.3
+FROM alpine
 
-COPY --from=builder /packs /packs
+ARG TARGETARCH
+
+WORKDIR /packs/${TARGETARCH}
+COPY --from=builder /packs /packs/${TARGETARCH}
 
 WORKDIR /packs
 

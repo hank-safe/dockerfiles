@@ -21,7 +21,10 @@ RUN wget -O net.tar.gz https://downloads.sourceforge.net/project/net-tools/net-t
 
 FROM alpine
 
-COPY --from=builder /packs /packs
+ARG TARGETARCH
+
+WORKDIR /packs/${TARGETARCH}
+COPY --from=builder /packs /packs/${TARGETARCH}
 
 WORKDIR /packs
 

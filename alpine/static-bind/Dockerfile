@@ -38,7 +38,9 @@ WORKDIR /packs
 
 
 FROM alpine
+ARG TARGETARCH
 
-COPY --from=builder /packs /packs
+WORKDIR /packs/${TARGETARCH}
+COPY --from=builder /packs /packs/${TARGETARCH}
 
 WORKDIR /packs

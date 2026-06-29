@@ -17,6 +17,10 @@ RUN wget https://sourceforge.net/projects/dos2unix/files/dos2unix/${app_version}
 
 FROM alpine
 
-COPY --from=builder /packs /packs
+ARG TARGETARCH
+
+WORKDIR /packs/${TARGETARCH}
+COPY --from=builder /packs /packs/${TARGETARCH}
+
 
 WORKDIR /packs

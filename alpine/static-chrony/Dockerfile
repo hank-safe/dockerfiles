@@ -18,6 +18,9 @@ RUN wget https://chrony-project.org/releases/chrony-${app_version}.tar.gz && \
 
 FROM alpine
 
-COPY --from=builder /packs /packs
+ARG TARGETARCH
+
+WORKDIR /packs/${TARGETARCH}
+COPY --from=builder /packs /packs/${TARGETARCH}
 
 WORKDIR /packs
