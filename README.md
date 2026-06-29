@@ -42,7 +42,7 @@ docker buildx build --build-arg app_version=${app_version} --platform ${platform
 |htop|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-htop:3.5.1|[alpine/static-htop](alpine/static-htop)|linux/amd64,linux/arm64|
 |iotop|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-iotop:1.31|[alpine/static-iotop](alpine/static-iotop)|linux/amd64,linux/arm64|
 |jq|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-jq:1.8.2|[alpine/static-jq](alpine/static-jq)|linux/amd64,linux/arm64|
-|keepalived|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-keepalived:2.2.8|[alpine/static-keepalived](alpine/static-keepalived)|linux/amd64,linux/arm64|
+|keepalived|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-keepalived:2.4.1|[alpine/static-keepalived](alpine/static-keepalived)|linux/amd64,linux/arm64|
 |lrzsz|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-lrzsz:0.12.20|[alpine/static-lrzsz](alpine/static-lrzsz)|linux/amd64,linux/arm64|
 |net-tools|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-net-tools:2.10|[alpine/static-net-tools](alpine/static-net-tools)|linux/amd64,linux/arm64|
 |netcat|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-netcat:0.7.1|[alpine/static-netcat](alpine/static-netcat)|linux/amd64,linux/arm64|
