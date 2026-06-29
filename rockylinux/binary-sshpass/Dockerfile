@@ -46,7 +46,7 @@ RUN wget -O sshpass.tar.gz https://sourceforge.net/projects/sshpass/files/sshpas
 
 FROM rockylinux/rockylinux:10.0
 WORKDIR /packs
-RUN mkdir -p /packs/amd64 && \
-    mkdir -p /packs/arm64 
-COPY --from=builder-amd64 /packs/binary-sshpass/bin/sshpass /packs/amd64/sshpass
-COPY --from=builder-arm64 /packs/binary-sshpass/bin/sshpass /packs/arm64/sshpass
+RUN mkdir -p /packs/amd64/sshpass && \
+    mkdir -p /packs/arm64/sshpass
+COPY --from=builder-amd64 /packs/binary-sshpass/bin/sshpass /packs/amd64/sshpass/sshpass
+COPY --from=builder-arm64 /packs/binary-sshpass/bin/sshpass /packs/arm64/sshpass/sshpass
