@@ -17,7 +17,7 @@ RUN wget https://curl.haxx.se/download/curl-${app_version}.tar.gz && \
     ./configure --prefix /packs/curl --disable-shared --enable-static \
     --disable-ldap --enable-ipv6 --enable-unix-sockets \
     --with-ssl --with-libssh2 --disable-docs --disable-manual --without-libpsl && \
-    make -j V=2 LDFLAGS="-static -all-static" && \
+    make -j2 V=2 LDFLAGS="-static -all-static" && \
     make install && \
     strip /packs/curl/bin/curl 
 

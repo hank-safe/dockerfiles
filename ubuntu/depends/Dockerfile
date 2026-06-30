@@ -34,15 +34,14 @@ RUN bash download.sh && rm -f download.sh
 
 FROM busybox:1.37.0
 
-WORKDIR /debs
-RUN mkdir -p /debs/x86_64 && \
-    mkdir -p /debs/aarch64
+WORKDIR /packs
+RUN mkdir -p /packs/amd64/debs && \
+    mkdir -p /packs/arm64/debs
 
-COPY --from=ubuntu-22.04-amd64-debs /debs/ /debs/x86_64/ubuntu22.04
-COPY --from=ubuntu-22.04-arm64-debs /debs/ /debs/aarch64/ubuntu22.04
+COPY --from=ubuntu-22.04-amd64-debs /debs/ /packs/amd64/debs/ubuntu22.04
+COPY --from=ubuntu-22.04-arm64-debs /debs/ /packs/arm64/debs/ubuntu22.04
 
-COPY --from=ubuntu-24.04-amd64-debs /debs/ /debs/x86_64/ubuntu24.04
-COPY --from=ubuntu-24.04-arm64-debs /debs/ /debs/aarch64/ubuntu24.04
-
+COPY --from=ubuntu-24.04-amd64-debs /debs/ /packs/amd64/debs/ubuntu24.04
+COPY --from=ubuntu-24.04-arm64-debs /debs/ /packs/arm64/debs/ubuntu24.04
 
 
