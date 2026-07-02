@@ -40,6 +40,10 @@ RUN set -eux; \
     tar -czf ansible-base.tar.gz ansible-base; \
     rm -rf ansible-base /opt/relocatable-python
 
+RUN rm -rf /packs/${TARGETARCH}/payload.tar.gz && \
+    rm -rf /packs/${TARGETARCH}/_head.sh && \
+    rm -rf /packs/${TARGETARCH}/installer-head.sh
+
 FROM ubuntu:22.04
 
 WORKDIR /packs
