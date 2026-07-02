@@ -63,19 +63,19 @@ if [[ $BATCH -eq 0 ]]; then
 fi
 
 # -----------------------------------------------------------------------------
-# 1. 找到 payload 起始位置（通过 gzip 魔数 1f 8b 定位）
-#    Shell 头部是纯 ASCII 文本，不含 \x1f\x8b，所以首次出现即为 payload 起始位置
-#    无需构建时嵌入任何偏移，适用于所有 Linux 环境
+# 1. 找到 payload 起始位置
+#    payload 紧跟在 __ARCHIVE_BELOW__ 标记行之后。不要扫描 gzip 魔数：grep -o
+#    可能在 gzip 的第一行中匹配到多个 1f 8b，并返回多个偏移量。
 # -----------------------------------------------------------------------------
-PAYLOAD_OFFSET=$(grep -boa -m 1 $'\x1f\x8b' "$0" 2>/dev/null | cut -d: -f1)
-[[ -n "$PAYLOAD_OFFSET" ]] || { echo "ERROR: cannot locate gzip payload in $0"; exit 1; }
+PAYLOAD_LINE=$(awk '/^__ARCHIVE_BELOW__$/ { print NR + 1; exit }' "$0")
+[[ -n "$PAYLOAD_LINE" ]] || { echo "ERROR: cannot locate payload marker in $0"; exit 1; }
 
 mkdir -p "$PREFIX"
 TMPDIR="$(mktemp -d)"
 trap 'rm -rf "$TMPDIR"' EXIT
 
 echo "[1/3] Extracting payload ..."
-tail -c +$((PAYLOAD_OFFSET + 1)) "$0" | tar -xzf - -C "$TMPDIR"
+tail -n +"$PAYLOAD_LINE" "$0" | tar -xzf - -C "$TMPDIR"
 
 # payload 解出来是 $TMPDIR/payload/...
 mv "$TMPDIR"/payload/* "$PREFIX"/
