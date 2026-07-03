@@ -6,26 +6,38 @@
 #      占位前缀长度固定为 255，保证用户实际安装路径一定不超过它
 #   2) 动态链接 + RPATH=$ORIGIN/../lib，把依赖的 .so 全部塞进 lib/
 #      这样目录整体可重定位
-#   3) 把成品打成 tar.zst，拼接到 installer-head.sh 后面，生成单文件 .sh
+#   3) 把成品打成 tar.gz，拼接到 installer-head.sh 后面，生成单文件 .sh
 #   4) 安装时脚本自解压 + 遍历所有文本/二进制把占位前缀替换为用户真实路径
 #
 # 为什么用 manylinux2014：
 #   - 基于 CentOS 7，glibc 2.17，覆盖几乎所有还在用的 Linux
 #     （RHEL/CentOS 7+、Ubuntu 16.04+、Debian 9+）
-#   - CentOS 7 官方源已 EOL，quay.io/pypa/manylinux2014_x86_64 由 PyPA 维护，
+#   - CentOS 7 官方源已 EOL，quay.io/pypa/manylinux2014_* 由 PyPA 维护，
 #     yum 源指向 vault.centos.org，内置 devtoolset-10 (gcc 10) 及常用 -devel
 #   - glibc 只能向后兼容：用老 glibc 编出来的可以跑在新系统上，反之不行
 #
 # 用法：
-#   docker build -t relocatable-python:3.11.6 \
+#   docker buildx build --load --platform linux/amd64 \
+#       -t relocatable-python:3.11.6-amd64 \
 #       --build-arg app_version=3.11.6 ubuntu/relocatable-python
-#   docker run --rm -v $PWD:/out relocatable-python:3.11.6 \
-#       cp /packs/python-3.11.6-installer.sh /out/
+#   docker buildx build --load --platform linux/arm64 \
+#       -t relocatable-python:3.11.6-arm64 \
+#       --build-arg app_version=3.11.6 ubuntu/relocatable-python
+#   docker run --rm -v $PWD:/out relocatable-python:3.11.6-arm64 \
+#       cp /packs/arm64/python-3.11.6-installer.sh /out/
 #   # 然后在任意 glibc >= 2.17 的机器上：
 #   bash python-3.11.6-installer.sh -p /opt/mypython -b
 # =============================================================================
 
-FROM quay.io/pypa/manylinux2014_x86_64 AS builder
+# TARGETARCH 的值是 amd64/arm64，而 manylinux 镜像后缀是 x86_64/aarch64，
+# 因此先定义两个架构 stage，再按 TARGETARCH 选择。不能只靠最终输出目录命名，
+# 否则会出现 x86_64 Python 被误放进 /packs/arm64 的情况。
+ARG TARGETARCH
+FROM --platform=linux/amd64 quay.io/pypa/manylinux2014_x86_64 AS base-amd64
+FROM --platform=linux/arm64 quay.io/pypa/manylinux2014_aarch64 AS base-arm64
+FROM base-${TARGETARCH} AS builder
+
+ARG TARGETARCH
 
 ARG app_version=3.11.6
 ENV app_version=${app_version}
@@ -195,7 +207,7 @@ RUN set -eux; \
     sort -u /tmp/text-files.lst -o /tmp/text-files.lst; \
     sort -u /tmp/bin-files.lst  -o /tmp/bin-files.lst
 
-# -------- 打包：tar.zst payload --------------------------------------------
+# -------- 打包：tar.gz payload ---------------------------------------------
 RUN mkdir -p /packs && cd /opt && \
     PLACEHOLDER_PREFIX=$(cat /PLACEHOLDER_PREFIX) && \
     PLACEHOLDER_DIR=$(basename ${PLACEHOLDER_PREFIX}) && \
@@ -205,7 +217,7 @@ RUN mkdir -p /packs && cd /opt && \
         ${PLACEHOLDER_DIR} /tmp/text-files.lst /tmp/bin-files.lst 2>/dev/null
 
 # -------- 拼接 installer-head.sh + payload 生成自解压 sh -------------------
-# 运行时通过 grep gzip 魔数 \x1f\x8b 定位 payload，无需构建时嵌入偏移
+# 运行时通过 __ARCHIVE_BELOW__ 标记定位 payload，无需构建时嵌入偏移
 COPY installer-head.sh /packs/installer-head.sh
 RUN set -eux; \
     PLACEHOLDER_PREFIX=$(cat /PLACEHOLDER_PREFIX); \
@@ -224,4 +236,3 @@ ARG TARGETARCH
 
 WORKDIR /packs/${TARGETARCH}
 COPY --from=builder /packs /packs/${TARGETARCH}
-
