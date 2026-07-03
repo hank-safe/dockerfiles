@@ -56,7 +56,7 @@ ENV PLACEHOLDER_BASE=/opt/_python_relocatable_placeholder_
 RUN yum install -y \
         bzip2-devel libffi-devel xz-devel ncurses-devel readline-devel \
         sqlite-devel libuuid-devel zlib-devel gdbm-devel \
-        wget zstd which file findutils \
+        wget which file findutils \
     && yum clean all
 
 # 启用 devtoolset-10（gcc 10），后续 RUN 都用它
