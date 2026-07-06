@@ -35,6 +35,10 @@ RUN set -eux; \
     /opt/relocatable-python/bin/python3 -m pip download \
         --dest "${output}" \
         --index-url "${pip_index_url}" \
+        setuptools wheel; \
+    /opt/relocatable-python/bin/python3 -m pip download \
+        --dest "${output}" \
+        --index-url "${pip_index_url}" \
         "${ansible_package}==${ansible_version}"; \
     cd "/packs/${TARGETARCH}"; \
     tar -czf ansible-base.tar.gz ansible-base; \
