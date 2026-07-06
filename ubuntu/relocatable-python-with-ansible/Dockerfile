@@ -20,8 +20,8 @@ FROM ${RELOCATABLE_PYTHON_IMAGE} AS builder
 
 ARG app_version
 ARG TARGETARCH
-ARG ansible_package=ansible-base
-ARG ansible_version=2.10.11
+ARG ansible_package=ansible-core
+ARG ansible_version=2.21.1
 ARG pip_index_url=https://mirrors.ustc.edu.cn/pypi/simple
 
 # 安装器来自 ubuntu/relocatable-python 的 /packs/${TARGETARCH}。
@@ -30,7 +30,7 @@ RUN set -eux; \
     installer="/packs/${TARGETARCH}/python-${app_version}-installer.sh"; \
     test -f "${installer}"; \
     bash "${installer}" -p /opt/relocatable-python -b; \
-    output="/packs/${TARGETARCH}/ansible-base"; \
+    output="/packs/${TARGETARCH}/ansible-core"; \
     mkdir -p "${output}"; \
     /opt/relocatable-python/bin/python3 -m pip download \
         --dest "${output}" \
@@ -41,8 +41,8 @@ RUN set -eux; \
         --index-url "${pip_index_url}" \
         "${ansible_package}==${ansible_version}"; \
     cd "/packs/${TARGETARCH}"; \
-    tar -czf ansible-base.tar.gz ansible-base; \
-    rm -rf ansible-base /opt/relocatable-python
+    tar -czf ansible-core.tar.gz ansible-core; \
+    rm -rf ansible-core /opt/relocatable-python
 
 RUN rm -rf /packs/${TARGETARCH}/payload.tar.gz && \
     rm -rf /packs/${TARGETARCH}/_head.sh && \
