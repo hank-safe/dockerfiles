@@ -99,10 +99,14 @@ on:
         description: "static-wget version"
         required: true
         default: "1.25.0"
-      relocatable_python_version:
-        description: "relocatable-python version"
+      miniconda_version:
+        description: "miniconda version"
         required: true
-        default: "3.13.13"
+        default: "py39_24.11.1-0"
+      sshpass_version:
+        description: "sshpass version"
+        required: true
+        default: "1.10"
 
 env:
   BUILD_DIR: alpine/static-all
@@ -131,7 +135,8 @@ env:
   STATIC_TCPDUMP_VERSION: ${{ github.event.inputs.static_tcpdump_version }}
   STATIC_VIM_VERSION: ${{ github.event.inputs.static_vim_version }}
   STATIC_WGET_VERSION: ${{ github.event.inputs.static_wget_version }}
-  RELOCATABLE_PYTHON_VERSION: ${{ github.event.inputs.relocatable_python_version }}
+  MINICONDA_VERSION: ${{ github.event.inputs.miniconda_version }}
+  SSHPASS_VERSION: ${{ github.event.inputs.sshpass_version }}
 
 jobs:
   build:
@@ -184,4 +189,5 @@ jobs:
           STATIC_TCPDUMP_VERSION=${{ env.STATIC_TCPDUMP_VERSION }}
           STATIC_VIM_VERSION=${{ env.STATIC_VIM_VERSION }}
           STATIC_WGET_VERSION=${{ env.STATIC_WGET_VERSION }}
-          RELOCATABLE_PYTHON_VERSION=${{ env.RELOCATABLE_PYTHON_VERSION }}
+          MINICONDA_VERSION=${{ env.MINICONDA_VERSION }}
+          SSHPASS_VERSION=${{ env.SSHPASS_VERSION }}
