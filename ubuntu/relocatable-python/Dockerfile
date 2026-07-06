@@ -132,8 +132,10 @@ RUN PLACEHOLDER_PREFIX=$(cat /PLACEHOLDER_PREFIX) && \
 # ldd 能通过 LD_LIBRARY_PATH 找到 /usr/local/lib64/libssl.so.1.1 等依赖。
 # patchelf 之后 RPATH 变成 $ORIGIN/...，ldd 对 .so 文件解析 $ORIGIN 不可靠，
 # 会漏掉 libssl/libcrypto 等依赖。
-# glibc 系列（libc/libdl/libm/libpthread/libnsl/libresolv/libutil/librt
+# glibc 核心运行时（libc/libdl/libm/libpthread/libresolv/libutil/librt
 # 以及 ld-linux*）严禁打包——必须用目标机器自己的 glibc，否则 NSS/locale 全崩
+# 但 libcrypt 不再属于 glibc 本体；在新发行版上通常由 libxcrypt 提供，
+# 如果构建出来的 Python 依赖它，就必须一起打包。
 RUN set -eux; \
     PLACEHOLDER_PREFIX=$(cat /PLACEHOLDER_PREFIX); \
     mkdir -p ${PLACEHOLDER_PREFIX}/lib; \
@@ -149,7 +151,7 @@ RUN set -eux; \
         esac; \
         case "$base" in \
             libc.so.*|libdl.so.*|libm.so.*|libpthread.so.*|librt.so.*|\
-            libutil.so.*|libresolv.so.*|libnsl.so.*|libcrypt.so.*|\
+            libutil.so.*|libresolv.so.*|libnsl.so.*|\
             ld-linux*.so.*|libgcc_s.so.*|libstdc++.so.*) \
                 : ;; \
             *) \
