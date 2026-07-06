@@ -43,7 +43,7 @@ FROM ${REPO}/static-tar:${STATIC_TAR_VERSION} AS binary-tar
 FROM ${REPO}/static-tcpdump:${STATIC_TCPDUMP_VERSION} AS binary-tcpdump
 FROM ${REPO}/static-vim:${STATIC_VIM_VERSION} AS binary-vim
 FROM ${REPO}/static-wget:${STATIC_WGET_VERSION} AS binary-wget
-FROM ${REPO}/relocatable-python:${RELOCATABLE_PYTHON_VERSION} AS binary-python
+FROM ${REPO}/relocatable-python-with-ansible:${RELOCATABLE_PYTHON_VERSION} AS binary-python
 
 FROM alpine AS aggregator
 
@@ -72,10 +72,7 @@ COPY --from=binary-tar /packs/${TARGETARCH}/tar ./tar
 COPY --from=binary-tcpdump /packs/${TARGETARCH}/tcpdump ./tcpdump
 COPY --from=binary-vim /packs/${TARGETARCH}/vim ./vim
 COPY --from=binary-wget /packs/${TARGETARCH}/wget ./wget
-COPY --from=binary-python /packs/${TARGETARCH} /tmp/python
-
-RUN mkdir -p ./python && \
-    cp -a /tmp/python/. ./python/
+COPY --from=binary-python /packs/${TARGETARCH} ./python
 
 FROM alpine
 
