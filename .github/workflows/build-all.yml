@@ -103,10 +103,6 @@ on:
         description: "miniconda version"
         required: true
         default: "py39_24.11.1-0"
-      sshpass_version:
-        description: "sshpass version"
-        required: true
-        default: "1.10"
 
 env:
   BUILD_DIR: alpine/static-all
@@ -136,7 +132,6 @@ env:
   STATIC_VIM_VERSION: ${{ github.event.inputs.static_vim_version }}
   STATIC_WGET_VERSION: ${{ github.event.inputs.static_wget_version }}
   MINICONDA_VERSION: ${{ github.event.inputs.miniconda_version }}
-  SSHPASS_VERSION: ${{ github.event.inputs.sshpass_version }}
 
 jobs:
   build:
@@ -190,4 +185,3 @@ jobs:
           STATIC_VIM_VERSION=${{ env.STATIC_VIM_VERSION }}
           STATIC_WGET_VERSION=${{ env.STATIC_WGET_VERSION }}
           MINICONDA_VERSION=${{ env.MINICONDA_VERSION }}
-          SSHPASS_VERSION=${{ env.SSHPASS_VERSION }}
