@@ -20,7 +20,7 @@ ARG STATIC_TAR_VERSION=1.35
 ARG STATIC_TCPDUMP_VERSION=4.99.6
 ARG STATIC_VIM_VERSION=9.1.1901
 ARG STATIC_WGET_VERSION=1.25.0
-ARG RELOCATABLE_PYTHON_VERSION=3.13.13
+ARG MINICONDA_VERSION=py39_24.11.1-0
 ARG SSHPASS_VERSION=1.10
 
 FROM ${REPO}/static-bind:${STATIC_BIND_VERSION} AS binary-bind
@@ -45,7 +45,7 @@ FROM ${REPO}/static-tcpdump:${STATIC_TCPDUMP_VERSION} AS binary-tcpdump
 FROM ${REPO}/static-vim:${STATIC_VIM_VERSION} AS binary-vim
 FROM ${REPO}/static-wget:${STATIC_WGET_VERSION} AS binary-wget
 FROM ${REPO}/binary-sshpass:${SSHPASS_VERSION} AS binary-sshpass
-FROM ${REPO}/relocatable-python-with-ansible:${RELOCATABLE_PYTHON_VERSION} AS binary-python
+FROM ${REPO}/binary-miniconda:${MINICONDA_VERSION} AS binary-miniconda
 
 FROM alpine AS aggregator
 
@@ -75,7 +75,7 @@ COPY --from=binary-tcpdump /packs/${TARGETARCH}/tcpdump ./tcpdump
 COPY --from=binary-vim /packs/${TARGETARCH}/vim ./vim
 COPY --from=binary-wget /packs/${TARGETARCH}/wget ./wget
 COPY --from=binary-sshpass /packs/${TARGETARCH}/sshpass ./sshpass
-COPY --from=binary-python /packs/${TARGETARCH} ./python
+COPY --from=binary-miniconda /packs/${TARGETARCH} ./miniconda
 
 FROM alpine
 
