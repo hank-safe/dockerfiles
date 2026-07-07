@@ -1,4 +1,7 @@
-FROM rockylinux/rockylinux:10.0 AS builder
+ARG TARGETARCH
+FROM --platform=linux/amd64 quay.io/pypa/manylinux2014_x86_64 AS base-amd64
+FROM --platform=linux/arm64 quay.io/pypa/manylinux2014_aarch64 AS base-arm64
+FROM base-${TARGETARCH} AS builder
 
 ARG https_proxy
 ARG http_proxy
@@ -18,8 +21,6 @@ RUN wget -O sshpass.tar.gz https://sourceforge.net/projects/sshpass/files/sshpas
     rm -rf sshpass.tar.gz sshpass-${app_version}
 
 FROM rockylinux/rockylinux:10.0
-
-ARG TARGETARCH
 
 WORKDIR /packs/${TARGETARCH}
 COPY --from=builder /packs /packs/${TARGETARCH}
