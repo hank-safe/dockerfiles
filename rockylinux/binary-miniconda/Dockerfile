@@ -18,6 +18,7 @@ RUN case "$TARGETARCH" in \
     bash "Miniconda3-${upstream_arch}.sh" -b -p /miniconda && \
     export PATH="/miniconda/bin:$PATH" && \
     mkdir -p "/packs/${pack_arch}/miniconda/ansible-base" && \
+    cp -a "Miniconda3-${upstream_arch}.sh" /packs/${pack_arch}/miniconda && \
     pip3 download -d "/packs/${pack_arch}/miniconda/ansible-base" ansible-base==2.10.11 -i https://mirrors.ustc.edu.cn/pypi/simple && \
     cd "/packs/${pack_arch}/miniconda" && \
     tar zcvf ansible-base.tar.gz ansible-base && \
