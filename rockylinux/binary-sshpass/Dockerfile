@@ -22,6 +22,8 @@ RUN wget -O sshpass.tar.gz https://sourceforge.net/projects/sshpass/files/sshpas
 
 FROM rockylinux/rockylinux:10.0
 
+ARG TARGETARCH
+
 WORKDIR /packs/${TARGETARCH}
 COPY --from=builder /packs /packs/${TARGETARCH}
 
