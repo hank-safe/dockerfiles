@@ -12,7 +12,7 @@ RUN apk add --no-cache \
 WORKDIR /build
 
 RUN wget -O sysstat.tar.xz \
-      "https://github.com/sysstat/sysstat/archive/refs/tags/v{app_version}.tar.gz" \
+      " https://codeload.github.com/sysstat/sysstat/tar.gz/refs/tags/v{app_version}" \
     && tar -xvf sysstat.tar.xz \
     && cd sysstat-${app_version} \
     && ./configure --prefix=/packs/rsync \
