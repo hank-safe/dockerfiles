@@ -16,6 +16,7 @@ ARG STATIC_NETCAT_VERSION=0.7.1
 ARG STATIC_NMAP_VERSION=7.99
 ARG STATIC_RSYNC_VERSION=3.4.4
 ARG STATIC_SMARTMONTOOLS_VERSION=7.5
+ARG STATIC_SYSSTAT_VERSION=12.7.9
 ARG STATIC_TAR_VERSION=1.35
 ARG STATIC_TCPDUMP_VERSION=4.99.6
 ARG STATIC_VIM_VERSION=9.1.1901
@@ -40,6 +41,7 @@ FROM ${REPO}/static-netcat:${STATIC_NETCAT_VERSION} AS binary-netcat
 FROM ${REPO}/static-nmap:${STATIC_NMAP_VERSION} AS binary-nmap
 FROM ${REPO}/static-rsync:${STATIC_RSYNC_VERSION} AS binary-rsync
 FROM ${REPO}/static-smartmontools:${STATIC_SMARTMONTOOLS_VERSION} AS binary-smartmontools
+FROM ${REPO}/static-sysstat:${STATIC_SYSSTAT_VERSION} AS binary-sysstat
 FROM ${REPO}/static-tar:${STATIC_TAR_VERSION} AS binary-tar
 FROM ${REPO}/static-tcpdump:${STATIC_TCPDUMP_VERSION} AS binary-tcpdump
 FROM ${REPO}/static-vim:${STATIC_VIM_VERSION} AS binary-vim
@@ -70,6 +72,7 @@ COPY --from=binary-netcat /packs/${TARGETARCH}/netcat ./netcat
 COPY --from=binary-nmap /packs/${TARGETARCH}/nmap ./nmap
 COPY --from=binary-rsync /packs/${TARGETARCH}/rsync ./rsync
 COPY --from=binary-smartmontools /packs/${TARGETARCH}/smartmontools ./smartmontools
+COPY --from=binary-sysstat /packs/${TARGETARCH}/sysstat ./sysstat
 COPY --from=binary-tar /packs/${TARGETARCH}/tar ./tar
 COPY --from=binary-tcpdump /packs/${TARGETARCH}/tcpdump ./tcpdump
 COPY --from=binary-vim /packs/${TARGETARCH}/vim ./vim

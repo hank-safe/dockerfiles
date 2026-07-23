@@ -49,6 +49,7 @@ docker buildx build --build-arg app_version=${app_version} --platform ${platform
 |nmap|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-nmap:7.99|[alpine/static-nmap](alpine/static-nmap)|linux/amd64,linux/arm64|
 |rsync|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-rsync:3.4.4|[alpine/static-rsync](alpine/static-rsync)|linux/amd64,linux/arm64|
 |smartmontools|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-smartmontools:7.5|[alpine/static-smartmontools](alpine/static-smartmontools)|linux/amd64,linux/arm64|
+|sysstat|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-sysstat:12.7.9|[alpine/static-sysstat](alpine/static-sysstat)|linux/amd64,linux/arm64|
 |tar|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-tar:1.35|[alpine/static-tar](alpine/static-tar)|linux/amd64,linux/arm64|
 |tcpdump|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-tcpdump:4.99.6|[alpine/static-tcpdump](alpine/static-tcpdump)|linux/amd64,linux/arm64|
 |vim|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-vim:9.1.1901|[alpine/static-vim](alpine/static-vim)|linux/amd64,linux/arm64|
