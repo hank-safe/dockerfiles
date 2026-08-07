@@ -16,6 +16,7 @@ RUN wget https://dl.k8s.io/v${app_version}/kubernetes-server-linux-amd64.tar.gz 
     mv kubernetes/server/bin/kube-proxy /packs/amd64/kubernetes/ && \
     mv kubernetes/server/bin/kubectl /packs/amd64/kubernetes/ && \
     mv kubernetes/server/bin/kubelet /packs/amd64/kubernetes/ && \
+    mv kubernetes/server/bin/kubeadm /packs/amd64/kubernetes/ && \
     rm -rf kubernetes kubernetes-server-linux-amd64.tar.gz
 
 RUN wget https://dl.k8s.io/v${app_version}/kubernetes-server-linux-arm64.tar.gz && \
@@ -26,4 +27,5 @@ RUN wget https://dl.k8s.io/v${app_version}/kubernetes-server-linux-arm64.tar.gz 
     mv kubernetes/server/bin/kube-proxy /packs/arm64/kubernetes/ && \
     mv kubernetes/server/bin/kubectl /packs/arm64/kubernetes/ && \
     mv kubernetes/server/bin/kubelet /packs/arm64/kubernetes/ && \
+    mv kubernetes/server/bin/kubeadm /packs/arm64/kubernetes/ && \
     rm -rf kubernetes kubernetes-server-linux-arm64.tar.gz
