@@ -46,6 +46,7 @@ docker buildx build --build-arg app_version=${app_version} --platform ${platform
 |lrzsz|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-lrzsz:0.12.20|[alpine/static-lrzsz](alpine/static-lrzsz)|linux/amd64,linux/arm64|
 |net-tools|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-net-tools:2.10|[alpine/static-net-tools](alpine/static-net-tools)|linux/amd64,linux/arm64|
 |netcat|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-netcat:0.7.1|[alpine/static-netcat](alpine/static-netcat)|linux/amd64,linux/arm64|
+|nload|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-nload:0.7.4|[alpine/static-nload](alpine/static-nload)|linux/amd64,linux/arm64|
 |nmap|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-nmap:7.99|[alpine/static-nmap](alpine/static-nmap)|linux/amd64,linux/arm64|
 |rsync|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-rsync:3.4.4|[alpine/static-rsync](alpine/static-rsync)|linux/amd64,linux/arm64|
 |smartmontools|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-smartmontools:7.5|[alpine/static-smartmontools](alpine/static-smartmontools)|linux/amd64,linux/arm64|
