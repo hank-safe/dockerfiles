@@ -19,6 +19,7 @@
 | static-lrzsz | 传输工具 |
 | static-net-tools | 网络工具集 |
 | static-netcat | 网络 debug |
+| static-nethogs | 按进程监控网络流量 |
 | static-nload | 实时网络流量监控 |
 | static-nmap | 端口扫描 |
 | static-rsync | 文件同步 |
