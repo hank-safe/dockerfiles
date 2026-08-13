@@ -1,0 +1,61 @@
+name: set-provenance-sbom-false
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_dir:
+        description: "build_dir"
+        required: true
+        default: "rockylinux/binary-cni"
+      build_version:
+        description: "build_version"
+        required: true
+        default: "2.9.0"
+      build_tag:
+        description: "build_tag"
+        required: true
+      build_name:
+        description: "build_name"
+        required: true
+      build_arch:
+        description: "build_arch"
+        required: true
+        default: "linux/amd64"
+
+env:
+  build_version: ${{ github.event.inputs.build_version }}
+  build_dir: ${{ github.event.inputs.build_dir }}
+  build_tag: ${{ github.event.inputs.build_tag }}
+  build_name: ${{ github.event.inputs.build_name }}
+  build_arch: ${{ github.event.inputs.build_arch }}
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        registry: crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com
+        username: ${{ secrets.ALIYUN_DOCKER_USERNAME }}
+        password: ${{ secrets.ALIYUN_DOCKER_PASSWORD }}
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v3
+      with:
+        context: ${{ env.build_dir }}
+        push: true
+        build-args: |
+          app_version=${{ env.build_version }}
+        tags: crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/${{ env.build_name }}:${{ env.build_tag }}
+        platforms: ${{ env.build_arch }}
+        file: ${{ env.build_dir }}/Dockerfile
+        provenance: false
+        sbom: false
