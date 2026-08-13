@@ -8,7 +8,8 @@ RUN sed -i "s#https://dl-cdn.alpinelinux.org/alpine#${ALPINE_REPOSITORY}#g" /etc
     apk add --no-cache \
         autoconf \
         automake \
-        build-base
+        build-base \
+        ncurses
 
 WORKDIR /build
 
@@ -19,6 +20,7 @@ RUN tar -xzf ncurses.tar.gz && \
     cd ncurses-${ncurses_version} && \
     CFLAGS="-O2 -std=gnu17" ./configure \
         --prefix=/build/ncurses \
+        --disable-database \
         --enable-widec \
         --with-fallbacks=xterm,xterm-256color,screen,screen-256color,linux,vt100 \
         --with-normal \
@@ -28,6 +30,7 @@ RUN tar -xzf ncurses.tar.gz && \
         --without-shared \
         --without-termlib && \
     make -j2 && \
+    grep -q 'fallback entries for:.*xterm-256color' ncurses/fallback.c && \
     make install && \
     cd /build && \
     tar -xzf nload.tar.gz && \
