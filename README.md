@@ -45,6 +45,7 @@ docker buildx build --build-arg app_version=${app_version} --platform ${platform
 |jq|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-jq:1.8.2|[alpine/static-jq](alpine/static-jq)|linux/amd64,linux/arm64|
 |keepalived|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-keepalived:2.4.1|[alpine/static-keepalived](alpine/static-keepalived)|linux/amd64,linux/arm64|
 |lrzsz|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-lrzsz:0.12.20|[alpine/static-lrzsz](alpine/static-lrzsz)|linux/amd64,linux/arm64|
+|ncdu|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-ncdu:2.9.1|[alpine/static-ncdu](alpine/static-ncdu)|linux/amd64,linux/arm64|
 |net-tools|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-net-tools:2.10|[alpine/static-net-tools](alpine/static-net-tools)|linux/amd64,linux/arm64|
 |netcat|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-netcat:0.7.1|[alpine/static-netcat](alpine/static-netcat)|linux/amd64,linux/arm64|
 |nethogs|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-nethogs:0.8.8|[alpine/static-nethogs](alpine/static-nethogs)|linux/amd64,linux/arm64|
