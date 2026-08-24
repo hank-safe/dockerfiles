@@ -57,3 +57,6 @@ jobs:
         tags: crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/${{ env.build_name }}:${{ env.build_tag }}
         platforms: ${{ env.build_arch }}
         file: ${{ env.build_dir }}/Dockerfile
+        provenance: false
+        sbom: false
+        

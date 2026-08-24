@@ -32,6 +32,7 @@ docker buildx build --build-arg app_version=${app_version} --platform ${platform
 
 |name|镜像名称|路径|架构|
 |---|---|---|---|
+|bc|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-bc:1.08.0|[alpine/static-bc](alpine/static-bc)|linux/amd64,linux/arm64|
 |bind|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-bind:9.16.50|[alpine/static-bind](alpine/static-bind)|linux/amd64,linux/arm64|
 |bmon|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-bmon:4.0|[alpine/static-bmon](alpine/static-bmon)|linux/amd64,linux/arm64|
 |chrony|crpi-p2k20xc75i1dtww9.cn-guangzhou.personal.cr.aliyuncs.com/hank997/static-chrony:4.8|[alpine/static-chrony](alpine/static-chrony)|linux/amd64,linux/arm64|
