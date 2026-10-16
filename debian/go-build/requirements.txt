@@ -1,0 +1,7 @@
+six
+setuptools==45.2.0
+PyYAML
+requests
+docopt
+markupsafe
+jinja2

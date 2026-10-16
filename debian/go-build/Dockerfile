@@ -13,18 +13,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # ci-tools需要使用的工具
 RUN apt-get update && \
-    apt-get install -y python3 python3-pip dos2unix vim git curl wget&& \
+    apt-get install -y python3 python3-pip python3-venv dos2unix vim git curl wget && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN curl -fsSL https://get.docker.com/ | sh
 
-RUN mkdir -p /code && \
-    cd /code && \
-    echo six > requirements.txt && \
-    echo setuptools==45.2.0 > requirements.txt && \
-    echo PyYAML > requirements.txt && \
-    echo requests > requirements.txt && \
-    echo docopt > requirements.txt && \
-    echo markupsafe > requirements.txt && \
-    echo jinja2 > requirements.txt && \
-    pip3 install -r /code/requirements.txt 
+COPY requirements.txt /code/requirements.txt
+
+RUN python3 -m venv /opt/venv && \
+    /opt/venv/bin/pip install --no-cache-dir -r /code/requirements.txt
+
+ENV PATH="/opt/venv/bin:${PATH}"
