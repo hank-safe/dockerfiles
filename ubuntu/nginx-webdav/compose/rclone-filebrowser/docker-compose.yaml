@@ -1,0 +1,49 @@
+services:
+  # 统一入口：/dav 转发到 rclone，其他路径转发到 File Browser。
+  gateway:
+    image: nginx:1.27.4-alpine
+    container_name: rclone-filebrowser-gateway
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - rclone
+      - filebrowser
+    networks:
+      - web-network
+
+  # WebDAV 服务，访问地址为 /dav/。
+  rclone:
+    image: rclone/rclone:latest
+    container_name: webdav-rclone
+    restart: always
+    command:
+      - serve
+      - webdav
+      - /data/dav
+      - --addr=:80
+      - --baseurl=/dav
+      - --user=${WEBDAV_USER:-admin}
+      - --pass=${WEBDAV_PASSWORD:-password}
+    volumes:
+      - ./data/dav:/data/dav
+    networks:
+      - web-network
+
+  # 文件管理页面，访问地址为 /files/。
+  filebrowser:
+    image: filebrowser/filebrowser:v2.32.0
+    container_name: rclone-filebrowser
+    restart: always
+    environment:
+      FB_BASEURL: /files
+    volumes:
+      - ./data/dav:/srv
+    networks:
+      - web-network
+
+networks:
+  web-network:
+    driver: bridge
