@@ -6,6 +6,13 @@ ARG app_version
 
 WORKDIR /tmp
 
+# 安装 IK 中文分词器
+RUN set -eux; \
+    /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch \
+        "https://get.infini.cloud/elasticsearch/analysis-ik/${app_version}" \
+    || /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch \
+        "https://github.com/infinilabs/analysis-ik/releases/download/v${app_version}/elasticsearch-analysis-ik-${app_version}.zip"
+
 # 安装 Pinyin 分词器（拼音搜索）
 RUN set -eux; \
     /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch \
