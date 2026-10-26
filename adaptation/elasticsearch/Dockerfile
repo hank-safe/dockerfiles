@@ -1,6 +1,6 @@
 ARG app_version=8.4.1
 
-FROM intellif.io/elasticsearch/elasticsearch:${app_version}
+FROM elasticsearch:${app_version}
 
 ARG app_version
 
